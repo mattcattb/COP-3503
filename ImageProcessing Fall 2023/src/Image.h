@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "functions.h"
 
 using namespace std;
 
@@ -62,11 +61,11 @@ public:
 
     //(12) Declare a read function
     void read();
-    void read(const string& name);
+    void read(const string& new_name);
 
     //(13) Declare a write function
     void write();
-    void write(const string& name);
+    void write(const string& new_name);
     
     // multiply blend
     Image operator*(const Image &img_b); 

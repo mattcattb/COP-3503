@@ -7,10 +7,11 @@
 using namespace std;
 
 
-int main() {
-    Image image;
-    image.read("input/the_dress.tga");
-    image.write("output/out.tga");
+int main(int argc, char** argv) {
+
+    Image image2("..input/circles.tga");
+    image2.read();
+    image2.write();
 
     /*
     
@@ -50,6 +51,8 @@ int main() {
     look like if you flipped it? Now, how to write some code to accomplish that...?
         
         */
+
+    return 0;
 }
 
 

@@ -6,176 +6,171 @@
 
 using namespace std;
 
-void task1();
-void task2();
-void task3();
-void task4();
-void task5();
-void task6();
-void task7();
-void task8();
-void task9();
-void task10();
+const string method_names[] = {"multiply", "subtract", "overlay", "screen", "combine", "flip", "onlyred", "onlygreen", "onlyblue", "addred", "addgreen", "addblue", "scalered", "scalegreen", "scaleblue"};
+
+const int args[] = {1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1}; // number of arguments used not including method name itself
+
+Image multiply(Image top, Image bottom);
+Image subtract(Image top, Image bottom);
+Image overlay(Image top, Image bottom);
+Image screen(Image top, Image bottom);
+Image combine(Image top, Image red, Image green, Image blue);
+Image flip(Image top);
+
+Image onlyred(Image top);
+Image onlyblue(Image top);
+Image onlygreen(Image top);
+
+Image addred(Image top, int val);
+Image addgreen(Image top, int val);
+Image addblue(Image top, int val);
+
+Image scalered(Image top, int scale);
+Image scalegreen(Image top, int scale);
+Image scaleblue(Image top, int scale);
+
+void display_help_message();
+
+bool is_tga(string filename);
+bool file_exists(string filename);
+int method_type(string method_name);
 
 //! move this outside of src directory!
 int main(int argc, char** argv) {
 
-    task1();
-    task2();
-    task3();
-    task3();
-    task4();
-    task5();
-    task6();
-    task7();
-    task8();
-    task9();
-    task10();
+    if (argv[0] == "--help" || argc == 0){
+        // print help message if argv[0] is --help or there are no arguements provided
+        display_help_message();
+    }
+
+    // check if argv[0] is tga filename
+
+    string output_file = argv[0];
+
+    if (is_tga(output_file) == false){
+        // stop if tga is not a file
+        cout << "Invalid file name."<< endl;
+        
+    }
+
+    string source_file = argv[1];
+    
+    if(is_tga(source_file) == false){
+        cout << "Invalid file name." << endl;
+    
+    } else if(file_exists(source_file) == false){
+        cout << "File does not exist." << endl;
+    }  
+
+    Image tracking(source_file);
+
+    int i = 2; // start at 2 for output_file and source_file
+
+    while (i < argc){
+        string cur_method = argv[i]; // current method
+
+
+        // after everything done, incriment according to which method used
+    }
 
     return 0;
 }
 
-
-void task1(){
-    // use mult blend to combine layer1 w pattern1
-    Image layer1("input/layer1.tga");
-    layer1.read();
-    Image pattern1("input/pattern1.tga");
-    pattern1.read();
-    Image result = layer1*pattern1; // top*bot layer
-    result.write("output/part1.tga");
-}
-
-void task2(){
-    // Use the Subtract blending mode to combine layer2.tga (bottom layer) with car.tga (top layer)
-    Image layer2_bottom("input/layer2.tga");
-    Image car_top("input/car.tga");
-
-    layer2_bottom.read();
-    car_top.read();
-    
-    Image result = car_top - layer2_bottom;
-    result.write("output/part2.tga");
+void display_help_message(){
+    // display all commands and usage for script
+    cout << "Project 2: Image Processing, Fall 2023\n\n";
+    cout << "Usage:\n";
+    cout << "\t./project2.out [output] [firstImage] [method] [...]";
 
 }
 
-void task3(){
-    /*
-    3. Use the Multiply blending mode to combine layer1.tga with pattern2.tga, and store the
-    results temporarily, in memory. Load the image text.tga as bottom
-    layer, combine with the previous result using the Screen blending mode.
-    */
-    Image layer1("input/layer1.tga");
-    Image layer2("input/pattern2.tga");
-    layer1.read();
-    layer2.read();
-    Image temp_img = layer1*layer2;
-
-    Image text("input/text.tga");
-    text.read();
-    Image result = temp_img.screen(text); // temp_img top, text bottom
-    result.write("output/part3.tga");
+bool is_tga(string filename){
+    // determines if filename ends in .tga
 }
 
-void task4(){
-    /*
-    4. Multiply layer2.tga with circles.tga, and store it. Load pattern2.tga and, using that
-    as the bottom layer, combine it with the previous result using the Subtract blending mode.
-    */
-    Image layer2("input/layer2.tga");
-    layer2.read();
-    Image circles("input/circles.tga");
-    circles.read();
-    Image temp = layer2*circles;
-    Image pattern2("input/pattern2.tga");   
-    pattern2.read();
-    Image result = temp - pattern2;
-    result.write("output/part4.tga");
+bool file_exists(string filename){
+    // determines if filename is real file
 }
 
-void task5(){
-    // Combine layer1.tga as top with pattern1.tga using Overlay
-    Image top_layer1("input/layer1.tga");
-    Image bottom_pattern1("input/pattern1.tga");
-    top_layer1.read();
-    bottom_pattern1.read();
-
-    Image result = top_layer1.overlay(bottom_pattern1);
-    result.write("output/part5.tga");
-
+int method_type(string method_name){
+    // return number corresponding to method ID, or -1 if method_name is not valid method
+    for (int i = 0; i < method_names->size(); i += 1){
+        if (method_names[i] == method_name){
+            return i;
+        }
+    }
+    return -1;
 }
 
-void task6(){
-    // Load car.tga and add 200 to the green channel.
-    Image car("input/car.tga");
-    car.read();
-    Pixel g(0,200,0); // add this green pixel to each pixel in image
-    Image result = car + g;
-    result.write("output/part6.tga");
-
+Image multiply(Image top, Image bottom){
+    return (top * bottom);
 }
 
-void task7(){
-    
-    // Load car.tga and scale (multiply) the red by 4, and blue channel by 0. 
-
-    Image car("input/car.tga");
-    car.read();
-
-    float scale[] = {4,1,0}; // scale red by 4, green by 1 (none), blue by 0
-
-    Image result = car*scale;
-    result.write("output/part7.tga");
-
+Image subtract(Image top, Image bottom){
+    return (top - bottom);
 }
 
-void task8(){
-    /*
-    8. Load car.tga and write each channel to a separate file: the red channel should be part8_r.tga,
-    the green channel should be part8_g.tga, and the blue channel should be part8_b.tga. 
-    If your red channel image appears all red, try writing [Red, Red, Red] instead of [Red, 0, 0] to the
-    file—ditto for green and blue!) 
-    */
+Image overlay(Image top, Image bottom){
+    return (top.overlay(bottom));
+}
 
-    Image car("input/car.tga");
-    car.read();
+Image screen(Image top, Image bottom){
+    return (top.screen(bottom));
+}
 
-    Image red = car.get_red_channel();
-    Image blue = car.get_blue_channel();
-    Image green = car.get_green_channel();
+Image combine(Image top, Image green, Image blue){
+    Image entwined(top,green,blue);
+    return entwined;
+}
 
-    red.write("output/part8_r.tga");
-    blue.write("output/part8_b.tga");
-    green.write("output/part8_g.tga");
+Image flip(Image top){
+    return top.rotate_180();
+}
+
+
+Image onlyred(Image top){
+    return top.get_red_channel();
+}
+
+Image onlyblue(Image top){
+    return top.get_blue_channel();
+}
+
+Image onlygreen(Image top){
+    return top.get_green_channel();
+}
+
+
+Image addred(Image top, int val){
+    Pixel addpix(val,0,0);
+    return (top + addpix);
+}
+
+Image addgreen(Image top, int val){
+    Pixel addpix(0, val, 0);
+    return (top + addpix);
+}
+
+Image addblue(Image top, int val){
+    Pixel addpix(0, 0, val);
+    return (top + addpix);
+}
+
+
+Image scalered(Image top, int scale){
+    float scale_arr[] = {(float)scale,1,1}; // scale red by 4, green by 1 (none), blue by 0
+    return (top*scale_arr);
 
 }
 
-void task9(){
-    /*    
-    Load layer_red.tga, layer_green.tga and layer_blue.tga, combine into one file. 
-    The data from layer_red.tga is the red channel of the new image, layer_green is green, 
-    and layer_blue is blue.
-    */
-
-    Image red("input/layer_red.tga");
-    Image green("input/layer_green.tga");
-    Image blue("input/layer_blue.tga");
-
-    red.read();
-    green.read();
-    blue.read();    
-
-    Image entwined(red,green,blue);
-
-    entwined.write("output/part9.tga");
-}
-
-void task10(){
-    // Load text2.tga, and rotate it 180 degrees, flipping it upside down.
-    
-    Image text2("input/text2.tga");
-    text2.read();
-    Image result = text2.rotate_180();
-    result.write("output/part10.tga");
+Image scalegreen(Image top, int scale){
+    const float scale_arr[] = {1.0, (float)scale, 1.0}; // scale red by 4, green by 1 (none), blue by 0
+    return (top*scale_arr);
 
 }
+
+Image scaleblue(Image top, int scale){
+    float scale_arr[] = {1, 1, (float)scale}; // scale red by 4, green by 1 (none), blue by 0
+    return (top * scale_arr);
+}
+

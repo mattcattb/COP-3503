@@ -8,7 +8,7 @@ using namespace std;
 
 const string method_names[] = {"multiply", "subtract", "overlay", "screen", "combine", "flip", "onlyred", "onlygreen", "onlyblue", "addred", "addgreen", "addblue", "scalered", "scalegreen", "scaleblue"};
 
-const int args[] = {1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1}; // number of arguments used not including method name itself
+const int num_args_method[] = {1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1}; // number of arguments used not including method name itself
 
 Image multiply(Image top, Image bottom);
 Image subtract(Image top, Image bottom);
@@ -33,7 +33,10 @@ void display_help_message();
 
 bool is_tga(string filename);
 bool file_exists(string filename);
-int method_type(string method_name);
+int get_method_id(string method_name);
+
+Image function_multiplexer(int method_id, string * args, Image tracking);
+string * parse_args(int method_id, int index, char** argv);
 
 //! move this outside of src directory!
 int main(int argc, char** argv) {
@@ -50,16 +53,18 @@ int main(int argc, char** argv) {
     if (is_tga(output_file) == false){
         // stop if tga is not a file
         cout << "Invalid file name."<< endl;
-        
+        return 0;
     }
 
     string source_file = argv[1];
     
     if(is_tga(source_file) == false){
         cout << "Invalid file name." << endl;
+        return 0;
     
     } else if(file_exists(source_file) == false){
         cout << "File does not exist." << endl;
+        return 0;
     }  
 
     Image tracking(source_file);
@@ -68,10 +73,24 @@ int main(int argc, char** argv) {
 
     while (i < argc){
         string cur_method = argv[i]; // current method
+        int method_id = get_method_id(cur_method);
+        int num_args = num_args_method[method_id];
+        
+        if (method_id == -1){
+            // wrong method ID!!!
+        }        
 
+        // get string of args for the function 
+
+        string * method_args = parse_args();
+
+        tracking = function_multiplexer();
 
         // after everything done, incriment according to which method used
+        i += (1 + num_args)
     }
+
+    tracking.write(output_file);
 
     return 0;
 }
@@ -86,13 +105,26 @@ void display_help_message(){
 
 bool is_tga(string filename){
     // determines if filename ends in .tga
+    int len = filename.length();
+
+    string filetype = filename.substr(len-5, 4);
+    if (filetype != ".tga"){
+        return false;
+    }
+    return true;
+    
 }
 
 bool file_exists(string filename){
     // determines if filename is real file
+    
+    ifstream stream = ifstream(filename, ios_base::binary);
+    bool exists = stream.is_open();
+    stream.close();
+    return exists;
 }
 
-int method_type(string method_name){
+int get_method_id(string method_name){
     // return number corresponding to method ID, or -1 if method_name is not valid method
     for (int i = 0; i < method_names->size(); i += 1){
         if (method_names[i] == method_name){
@@ -101,6 +133,16 @@ int method_type(string method_name){
     }
     return -1;
 }
+
+Image function_multiplexer(int method_id, string * args, Image tracking){
+    // using string of args and tracking image, apply specific function
+}
+
+string * parse_args(int method_id, int index, char** argv){
+    // return a string of the arguements to a specfic arg to be parsed
+}
+
+//!!!!! CHANGE EACH OF THESE FUNCTIONS TO TAKE A STRING* OF ARGS!!!
 
 Image multiply(Image top, Image bottom){
     return (top * bottom);

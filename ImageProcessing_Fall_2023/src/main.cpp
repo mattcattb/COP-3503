@@ -53,18 +53,18 @@ int main(int argc, char** argv) {
     if (is_tga(output_file) == false){
         // stop if tga is not a file
         cout << "Invalid file name."<< endl;
-        return 0;
+        return 1;
     }
 
     string source_file = argv[1];
     
     if(is_tga(source_file) == false){
         cout << "Invalid file name." << endl;
-        return 0;
+        return 1;
     
     } else if(file_exists(source_file) == false){
         cout << "File does not exist." << endl;
-        return 0;
+        return 1;
     }  
 
     Image tracking_img(source_file);
@@ -75,16 +75,25 @@ int main(int argc, char** argv) {
     while (i < argc){
         string cur_method = argv[i]; // current method
         int method_id = get_method_id(cur_method);
-        int num_args = num_args_method[method_id];
         
         if (method_id == -1){
             //! wrong method ID!!!
-            cout << "Wrong method ID" << endl;
-            
+            cout << "Invalid method name." << endl;
+            return 1;
         }        
+    
+        // see if arguements are missing or not?
+        int num_args = num_args_method[method_id];
 
-        // get string of args for the function 
+        // get string of args for the function. 
+        //! THIS WILL ONLY WORK if argv array has enough arguements
         string *method_args = parse_args(method_id, i, argv);
+
+        // arguement check
+        for(int i = 0; i < num_args; i += 1){
+            string cur_arg = method_args[i];
+
+        }
 
         // apply that function and arguement to the function multiplexer!
         function_multiplexer(method_id, method_args, tracking_img);
@@ -96,6 +105,18 @@ int main(int argc, char** argv) {
     tracking_img.write(output_file);
 
     return 0;
+}
+
+bool args_valid(int method_id, string * args){
+    //! WORK ON THIS FUNCTION maybe?
+    // determine if args are valid or not!
+    // if file doesnt exist, "Invalid arguement, file does not exist."
+    // if arg isnt number, "Invalid arguement, expected number."
+    
+    if (method_id >= 0 && method_id <=3){
+        // args should just be 1 arguement!
+    } 
+    
 }
 
 void display_help_message(){
@@ -115,7 +136,6 @@ bool is_tga(string filename){
         return false;
     }
     return true;
-    
 }
 
 bool file_exists(string filename){

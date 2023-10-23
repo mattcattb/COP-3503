@@ -10,24 +10,24 @@ const string method_names[] = {"multiply", "subtract", "overlay", "screen", "com
 
 const int num_args_method[] = {1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1}; // number of arguments used not including method name itself
 
-Image multiply(Image top, Image bottom);
-Image subtract(Image top, Image bottom);
-Image overlay(Image top, Image bottom);
-Image screen(Image top, Image bottom);
-Image combine(Image top, Image red, Image green, Image blue);
-Image flip(Image top);
+Image multiply(Image top, string * args);
+Image subtract(Image top, string * args);
+Image overlay(Image top, string * args);
+Image screen(Image top, string * args);
+Image combine(Image top, string * args);
+Image flip(Image top, string * args);
 
-Image onlyred(Image top);
-Image onlyblue(Image top);
-Image onlygreen(Image top);
+Image onlyred(Image top, string * args);
+Image onlyblue(Image top, string * args);
+Image onlygreen(Image top, string * args);
 
-Image addred(Image top, int val);
-Image addgreen(Image top, int val);
-Image addblue(Image top, int val);
+Image addred(Image top, string * args);
+Image addgreen(Image top, string * args);
+Image addblue(Image top, string * args);
 
-Image scalered(Image top, int scale);
-Image scalegreen(Image top, int scale);
-Image scaleblue(Image top, int scale);
+Image scalered(Image top, string * args);
+Image scalegreen(Image top, string * args);
+Image scaleblue(Image top, string * args);
 
 void display_help_message();
 
@@ -67,8 +67,8 @@ int main(int argc, char** argv) {
         return 0;
     }  
 
-    Image tracking(source_file);
-    tracking.read();
+    Image tracking_img(source_file);
+    tracking_img.read();
 
     int i = 2; // start at 2 for output_file and source_file
 
@@ -79,18 +79,21 @@ int main(int argc, char** argv) {
         
         if (method_id == -1){
             //! wrong method ID!!!
+            cout << "Wrong method ID" << endl;
+            
         }        
 
         // get string of args for the function 
         string *method_args = parse_args(method_id, i, argv);
 
-        function_multiplexer(method_id, method_args, tracking);
+        // apply that function and arguement to the function multiplexer!
+        function_multiplexer(method_id, method_args, tracking_img);
 
         // after everything done, incriment according to which method used
         i += (1 + num_args);
     }
 
-    tracking.write(output_file);
+    tracking_img.write(output_file);
 
     return 0;
 }
@@ -134,10 +137,86 @@ int get_method_id(string method_name){
     return -1;
 }
 
-void function_multiplexer(int method_id, string * args, Image &track_img){
+void function_multiplexer(int method_id, string * args, Image &tracking){
     // using string of args and tracking image, apply specific function and change track_img
 
+    Image new_img;
+
+    if (method_id == 0) {
+        // multiply 
+        string bottom_fname = args[0];
+        Image bottom(bottom_fname);
+        bottom.write();
+        new_img = multiply(tracking, bottom);
+    } else if (method_id == 1) {
+        // subtract
+        string bottom_fname = args[0];
+        Image bottom(bottom_fname);
+        bottom.write();
+        new_img = subtract(tracking, bottom);
+    } else if (method_id == 2) {
+        // overlay
+        string bottom_fname = args[0];
+        Image bottom(bottom_fname);
+        bottom.write();
+        new_img = overlay(tracking, bottom);
+    } else if (method_id == 3) {
+        // screen
+        string bottom_fname = args[0];
+        Image bottom(bottom_fname);
+        bottom.write();
+        new_img = screen(tracking, bottom);
+    } else if (method_id == 4) {
+        // combine
+        string green_fname = args[0];
+        string blue_fname = args[1];
+        Image green(green_fname);
+        Image blue(blue_fname);
+        green.write();
+        blue.write();
+        new_img = combine(tracking, green, blue);
+    } else if (method_id == 5) {
+        // flip
+        new_img = flip(tracking);
+    } else if (method_id == 6) {
+        // onlyred
+        new_img = onlyred(tracking);
+    } else if (method_id == 7) {
+        // onlygreen
+        new_img = onlygreen(tracking);
+    } else if (method_id == 8) {
+        // onlyblue
+        new_img = onlyblue(tracking);
+    } else if (method_id == 9) {
+        // addred
+        int val = stoi(args[0]);
+        new_img = addred(tracking, val);
+    } else if (method_id == 10) {
+        // addgreen
+        int val = stoi(args[0]);
+        new_img = addgreen(tracking, val);
+    } else if (method_id == 11) {
+        // addblue
+        int val = stoi(args[0]);
+        new_img = addblue(tracking, val);
+    } else if (method_id == 12) {
+        // scalered
+        int scale = stoi(args[0]);
+        new_img = scalered(tracking, scale);
+    } else if (method_id == 13) {
+        // scalegreen
+        int scale = stoi(args[0]);
+        new_img = scalegreen(tracking, scale);
+    } else if (method_id == 14) {
+        // scaleblue
+        int scale = stoi(args[0]);
+        new_img = scaleblue(tracking, scale);
+    } else {
+        // Default case
+    }
     
+    tracking.pixelVec = new_img.pixelVec;
+
 }
 
 string * parse_args(int method_id, int index, char** argv){
@@ -156,101 +235,76 @@ string * parse_args(int method_id, int index, char** argv){
 
 //!!!!! CHANGE EACH OF THESE FUNCTIONS TO TAKE A STRING* OF ARGS!!!
 
-Image multiply(Image top, string * args){
-    string bottom_fname = args[0];
-    Image bottom(bottom_fname);
-    
+Image multiply(Image top, Image bottom){
     return (top * bottom);
 }
 
-Image subtract(Image top, string * args){
-    string bottom_fname = args[0];
-    Image bottom(bottom_fname);
-    bottom.write();
+Image subtract(Image top, Image bottom){
     return (top - bottom);
 }
 
-Image overlay(Image top, string * args){
-    string bottom_fname = args[0];
-    Image bottom(bottom_fname);
-    bottom.write();
+Image overlay(Image top, Image bottom){
     return (top.overlay(bottom));
 }
 
-Image screen(Image top, string * args){
-    string bottom_fname = args[0];
-    Image bottom(bottom_fname);
-    bottom.write();
-
+Image screen(Image top, Image bottom){
     return (top.screen(bottom));
 }
 
-Image combine(Image top, string * args){
-    string green_fname = args[0];
-    string blue_fname = args[1];
-    Image green(green_fname);
-    Image blue(blue_fname);
-    green.write();
-    blue.write();
+Image combine(Image top, Image green, Image blue){
 
     Image entwined(top,green,blue);
     return entwined;
 }
 
-Image flip(Image top, string * args){
+Image flip(Image top){
     return top.rotate_180();
 }
 
 
-Image onlyred(Image top, string * args){
+Image onlyred(Image top){
     return top.get_red_channel();
 }
 
-Image onlyblue(Image top, string * args){
+Image onlyblue(Image top){
     return top.get_blue_channel();
 }
 
-Image onlygreen(Image top, string * args){
+Image onlygreen(Image top){
     return top.get_green_channel();
 }
 
 
-Image addred(Image top, string * args){
+Image addred(Image top, int val){
 
-    int val = stoi(args[0]);
     Pixel addpix(val,0,0);
     return (top + addpix);
 }
 
-Image addgreen(Image top, string * args){
-    int val = stoi(args[0]);
+Image addgreen(Image top, int val){
     Pixel addpix(0, val, 0);
     return (top + addpix);
 }
 
-Image addblue(Image top, string * args){
-    int val = stoi(args[0]);
+Image addblue(Image top, int val){
     Pixel addpix(0, 0, val);
     return (top + addpix);
 }
 
 
-Image scalered(Image top, string * args){
-    int scale = stoi(args[0]);
+Image scalered(Image top, int scale){
     float scale_arr[] = {(float)scale,1,1}; // scale red by 4, green by 1 (none), blue by 0
     return (top*scale_arr);
 
 }
 
-Image scalegreen(Image top, string * args){
-    int scale = stoi(args[0]);
+Image scalegreen(Image top, int scale){
     const float scale_arr[] = {1.0, (float)scale, 1.0}; // scale red by 4, green by 1 (none), blue by 0
     return (top*scale_arr);
 
 }
 
-Image scaleblue(Image top, string * args){
-    int scale = stoi(args[0]);
+Image scaleblue(Image top, int scale){
     float scale_arr[] = {1, 1, (float)scale}; // scale red by 4, green by 1 (none), blue by 0
     return (top * scale_arr);
 }

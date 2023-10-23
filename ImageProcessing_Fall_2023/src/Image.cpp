@@ -25,7 +25,14 @@ Image::Image(const string& name) {
     this->name = name;
 }
 
-Image::Image(Image &img_r, Image &img_g, Image &img_b){
+Image::Image(const Image &a){
+    // copy constructor 
+    this->header = a.header;
+    this->pixelVec = a.pixelVec;
+    this->name = a.name;
+}
+
+Image::Image(const Image &img_r, const Image &img_g, const Image &img_b){
     // 3 way copy constructor.
     this->name = "new_image";
     this->header = img_r.header;
@@ -42,6 +49,16 @@ Image::Image(Image &img_r, Image &img_g, Image &img_b){
         pixelVec.push_back(pixel);
     }
 } 
+
+Image& Image::operator=(const Image &b){
+    
+    this->header = b.header;
+    this->name = "";
+    this->pixelVec = b.pixelVec;
+
+    return *this;
+}
+
 
 void Image::read() {
 

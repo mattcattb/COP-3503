@@ -60,8 +60,11 @@ public:
     //(11) Declare an Image constructor
     Image();
     Image(const string& name);
+    Image(const Image &a);
     // construct image using 3 images, one for each color channel
-    Image(Image &img_r, Image &img_g, Image &img_b); 
+    Image(const Image &img_r, const Image &img_g, const Image &img_b); 
+    Image& operator=(const Image &b);
+
 
     //(12) Declare a read function
     void read();

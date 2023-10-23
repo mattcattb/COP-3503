@@ -12,7 +12,7 @@ run:
 	./project2.out output/part8_r.tga input/car.tga onlyred
 	./project2.out output/part8_g.tga input/car.tga onlygreen
 	./project2.out output/part8_b.tga input/car.tga onlyblue
-	./project2.out output/part9.tga combine input/layer_red input/layer_green.tga input/layer_blue.tga
+	./project2.out output/part9.tga input/layer_red.tga combine input/layer_green.tga input/layer_blue.tga
 	./project2.out output/part10.tga input/text2.tga flip 
 	
 tasks:

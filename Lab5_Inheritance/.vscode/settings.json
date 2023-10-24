@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp",
+        "typeinfo": "cpp",
+        "*.tcc": "cpp",
+        "sstream": "cpp"
+    }
+}

@@ -9,6 +9,12 @@ unsigned char channel_screen(unsigned char ch_1, unsigned char ch_2);
 unsigned char channel_sub(unsigned char ch_1, unsigned char ch_2);
 unsigned char channel_mult(unsigned char ch_1, unsigned char ch_2);
 unsigned char channel_overlay(unsigned char ch_1, unsigned char ch_2);
+unsigned char float_2_channel(float val);
+unsigned char float_mult(unsigned char ch, float fl);
+unsigned char one_sub(unsigned char ch_1);
+float norm(unsigned char ch);
+unsigned char channel_mult(unsigned char ch_1, float ch_2);
+
 
 Image::Image(){
     this->name = "";
@@ -271,16 +277,44 @@ Image Image::operator*(const float arr[3]){
 
     while(i < this->pixelVec.size()){
         Pixel p1 = this->pixelVec[i];
-        unsigned char red = channel_mult(p1.red, arr[0]); 
-        unsigned char green = channel_mult(p1.green, arr[1]);
-        unsigned char blue = channel_mult(p1.blue, arr[2]);
 
+        unsigned char red = float_mult(p1.red, arr[0]);
+        unsigned char green = float_mult(p1.green, arr[1]);
+        unsigned char blue = float_mult(p1.blue, arr[2]);
+        
         Pixel new_pix(red, green, blue);
         new_img.pixelVec.push_back(new_pix);
         i += 1;
     }
 
     return new_img;
+}
+
+unsigned char float_mult(unsigned char ch, float fl){
+    // multiply channel by float
+    float val = norm(ch);
+    float val_2 = val*fl;
+    if (val_2 > 1.0){
+        val_2 = 1.0;
+    }else if (val_2 < 0.0){
+        val_2 = 0.0;
+    }
+    unsigned char return_val = val_2*255 + 0.5f;
+    return return_val;
+}
+
+unsigned char float_2_channel(float val){
+    // convert float to channel
+    float return_val = val*255.0 + 0.5f;
+    if (return_val > 255){
+        return_val = 255;
+    }else if (return_val < 0){
+        return_val = 0;
+    }
+
+    unsigned char val_char = (unsigned char)return_val;
+
+    return val_char;
 }
 
 Image Image::screen(const Image &img_2){
@@ -494,10 +528,6 @@ Pixel::Pixel(unsigned char r, unsigned char g, unsigned char b){
     blue = b; 
 }
 
-unsigned char one_sub(unsigned char ch_1);
-float norm(unsigned char ch);
-unsigned char channel_mult(unsigned char ch_1, float ch_2);
-
 unsigned char channel_add(unsigned char ch_1, unsigned char ch_2){
     // ch_1 + ch_2 with clamping
     int val = ((int)ch_1) + ((int)ch_2);
@@ -574,16 +604,25 @@ unsigned char channel_overlay(unsigned char ch_1, unsigned char ch_2){
     float norm_c2 = norm(ch_2);
 
     if (norm_c2 <= 0.5){
-        // multiply
-        unsigned char v1 = channel_mult(ch_1, ch_2);
-        float normed_v1 = norm(v1);
-        float val = 2*normed_v1;
+        // 2*NP1*NP2
+        float np1 = norm(ch_1);
+        float np2 = norm(ch_2);
+        
+        float val = 2.0*np1*np2;
         unsigned char return_val = val*255 + 0.5f;
         return return_val;
 
     }else{
-        // norm_c2 > 0.5
-        return channel_screen(ch_1, ch_2);
+        // norm_c2 > 0.5, 1-[2*(1-NP1)*(1-NP2)]
+        float np1 = norm(ch_1);
+        float val_1 = 1.0 - np1;
+        float np2 = norm(ch_2);
+        float val_2 = 1.0 - np2;
+
+        float val_3 = 2.0*val_1*val_2;
+        float val_4 = 1.0 - val_3;
+        unsigned char return_val = val_4*255 + 0.5f;
+        return return_val;
     }
 
 }

@@ -162,7 +162,7 @@ bool args_valid(int method_id, int i, char ** argv, int argc){
         try {
             val1 = stoi(argv[i + 1]);
         }catch(invalid_argument e){
-            cout << "Invalid arguement, expected number." << endl;
+            cout << "Invalid argument, expected number." << endl;
             return false;
         }
 

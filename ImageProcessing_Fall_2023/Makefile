@@ -1,6 +1,10 @@
 build:
 	g++ -std=c++11 -o project2.out src/main.cpp src/Image.cpp
 
+help:
+	./project2.out
+	./project2.out --help
+
 run: 
 	./project2.out output/part1.tga input/layer1.tga multiply input/pattern1.tga
 	./project2.out output/part2.tga input/car.tga subtract input/layer2.tga  

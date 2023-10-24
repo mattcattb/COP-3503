@@ -2,6 +2,7 @@
 #include <ostream>
 #include <fstream>
 #include <vector>
+#include <cstring>
 #include "Image.h"
 
 using namespace std;
@@ -43,9 +44,10 @@ void function_multiplexer(int method_id, string * args, Image &tracking);
 int main(int argc, char** argv) {
 
     // display message
-    if (argv[1] == "--help" || argc == 1){
+    if (argc < 2 || (strcmp(argv[1], "--help") == 0)){
         // print help message if argv[0] is --help or there are no arguements provided
         display_help_message();
+        return 0;
     }
 
     string output_file = argv[1];
@@ -160,7 +162,7 @@ void display_help_message(){
     // display all commands and usage for script
     cout << "Project 2: Image Processing, Fall 2023\n\n";
     cout << "Usage:\n";
-    cout << "\t./project2.out [output] [firstImage] [method] [...]";
+    cout << "\t./project2.out [output] [firstImage] [method] [...]\n";
 
 }
 

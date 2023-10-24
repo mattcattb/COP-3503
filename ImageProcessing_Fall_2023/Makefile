@@ -5,6 +5,9 @@ help:
 	./project2.out
 	./project2.out --help
 
+errors:
+	./project2.out out
+
 run: 
 	./project2.out output/part1.tga input/layer1.tga multiply input/pattern1.tga
 	./project2.out output/part2.tga input/car.tga subtract input/layer2.tga  

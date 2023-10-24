@@ -51,18 +51,20 @@ int main(int argc, char** argv) {
     }
 
     string output_file = argv[1];
-
     if (is_tga(output_file) == false){
         // stop if tga is not a file
+        cout << "Invalid file name." << endl;
         return 1;
     }
 
     string source_file = argv[2];
     
     if(is_tga(source_file) == false){
+        cout << "Invalid file name." << endl;
         return 1;
     
     } else if(file_exists(source_file) == false){
+        cout << "File does not exist." << endl;
         return 1;
     }  
 
@@ -74,8 +76,6 @@ int main(int argc, char** argv) {
     while (i < argc){
         string cur_method = argv[i]; // current method
         int method_id = get_method_id(cur_method);
-
-        cout << "i: " << i << " method: " << cur_method << endl;
 
         if (method_id == -1){
             cout << "Invalid method name." << endl;
@@ -122,7 +122,11 @@ bool args_valid(int method_id, int i, char ** argv, int argc){
     if (method_id >= 0 && method_id <=3){
         // args should just be 1 arguement!
         string file_1 = argv[i + 1];
-        if (is_tga(file_1) == false || file_exists(file_1) == false){
+        if (is_tga(file_1) == false){
+            cout << "Invalid argument, invalid file name." << endl;
+            return false;
+        }else if (file_exists(file_1) == false){
+            cout << "Invalid argument, file does not exist." << endl;
             return false;
         }
 
@@ -132,9 +136,18 @@ bool args_valid(int method_id, int i, char ** argv, int argc){
         string file_1 = argv[i + 1];
         string file_2 = argv[i + 2];
 
-        if (is_tga(file_1) == false || file_exists(file_1) == false){
+        if (is_tga(file_1) == false){
+            cout << "Invalid arguement, invalid file name." << endl;
             return false;
-        }else if (is_tga(file_2) == false || file_exists(file_2) == false){
+        
+        }else if (file_exists(file_1) == false){
+            cout << "Invalid argument, file does not exist." << endl;
+            return false;
+        }else if (is_tga(file_2) == false){
+            cout << "Invalid arguement, invalid file name." << endl;
+            return false;
+        }else if (file_exists(file_2) == false){
+            cout << "Invalid argument, file does not exist." << endl;
             return false;
         }
 
@@ -170,9 +183,13 @@ bool is_tga(string filename){
     // determines if filename ends in .tga
     int len = filename.length();
 
+    if (len <= 4){
+        // filename too short!
+        return false;
+    }
+
     string filetype = filename.substr(len-4, 4);
     if (filetype != ".tga"){    
-        cout << "Invalid file name."<< endl;
         return false;
     }
 
@@ -185,11 +202,6 @@ bool file_exists(string filename){
     ifstream stream = ifstream(filename, ios_base::binary);
     bool exists = stream.is_open();
     stream.close();
-    if (exists == false){
-        cout << "File does not exist." << endl;
-
-    }
-
     return exists;
 }
 

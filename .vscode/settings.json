@@ -4,6 +4,10 @@
         "ostream": "cpp",
         "fstream": "cpp",
         "stdexcept": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "optional": "cpp"
     }
 }

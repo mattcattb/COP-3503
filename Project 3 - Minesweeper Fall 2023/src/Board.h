@@ -3,6 +3,7 @@
 
 class Board{
 
+    //! HOW DO I STORE TILES?
     Tiles** tile_vector;
 
 public:

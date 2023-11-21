@@ -1,55 +1,47 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <fstream>
 #include <string>
+#include <iostream>
 
 class Welcome_Window{
 
-    int height, width;
-    int cols, rows;
+    // variables
+    int _height, _width;
+    int _cols, _rows;
 
+    std::string character_name;
+
+    // text boxes to display
+    sf::Text _welcome_message; // WELCOME TO MINESWEEPER
+    sf::Text _enter_name_prompt; // enter name
+    sf::Text _user_name;
     
+    // assets  
+    sf::Font _text_font;
+    
+    // render window (IMPORTANT)
     sf::RenderWindow render_window;
 
-    void parse_size();
+    // init welcome window objects
+    void init_fonts();
+    void init_window();
+    void init_variables(int cols, int rows);
+    void init_text();
+
+    // helpers
+    void setup_text(sf::Text &text, std::string message, sf::Font &font, bool bold, bool underlined, sf::Color color, int size, sf::Vector2f position);
+    void setTextPos(sf::Text &text, float x, float y); // set position of text
+
+    // drawing
+    void draw_all();
+    void draw_text();
+    void update_username();
+
 
 public:
 
-    Welcome_Window();
-    void event_loop();
+    Welcome_Window(int cols, int rows);
+    int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
 
 };
 
-void Welcome_Window::event_loop(){
-    
-}
-
-
-Welcome_Window::Welcome_Window(){
-    parse_size();
-    height = rows*32 + 100;
-    width = cols*32;
-
-    render_window.create(sf::VideoMode(height, width));
-
-}
-
-void Welcome_Window::parse_size(){
-    std::ifstream config_fin("files/board_config.cfg");
-    std::string buffer;
-    
-    config_fin >> buffer;
-    cols = stoi(buffer);
-    
-    config_fin >> buffer; 
-    rows = stoi(buffer);
-
-    config_fin.close();
-}
-
-void setText(sf::Text &text, float x, float y){
-    sf::FloatRect textRect = text.getLocalBounds();
-    text.setOrigin(textRect.left + textRect.width/2.0f,
-                    textRect.top+textRect.height/2.0f);
-    text.setPosition(sf::Vector2f(x,y));
-}

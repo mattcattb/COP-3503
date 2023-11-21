@@ -16,11 +16,22 @@ int main(int argc, char ** argv){
     Welcome_Window welcome_window(cols, rows);
 
     int state = 0;
+    std::string username; 
 
-    while(state == 0){
-        state = welcome_window.event_loop();
+    // welcome window
+    state = welcome_window.event_loop(); 
+
+    if (state == -1){
+        // immediatly end program
+        return 0;
     }
 
+    // go into game part now
+    username = welcome_window.get_character_name();
+
+    
+
+    // game loop
     return 0;
 }
 

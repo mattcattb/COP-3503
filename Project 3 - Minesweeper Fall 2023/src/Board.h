@@ -11,8 +11,8 @@ class Board{
 
 public:
 
-    Board(int rows, int cols);
-
+    Board();
+    void setup_tiles(int rows, int cols);
 
 };
 

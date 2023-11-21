@@ -81,6 +81,11 @@ int Welcome_Window::event_loop(){
 
 }
 
+std::string Welcome_Window::get_character_name(){
+    return character_name;
+}
+
+
 // ========= INIT HELPER FUNCTIONS ==========
 
 void Welcome_Window::init_fonts(){
@@ -172,5 +177,5 @@ void Welcome_Window::update_username(){
     // update username?
     std::string final_user = character_name + "|";
     _user_name.setString(final_user);
-    setTextPos(_user_name, )
+    setTextPos(_user_name, _width/2.0, _height/2.0 - 45);
 }

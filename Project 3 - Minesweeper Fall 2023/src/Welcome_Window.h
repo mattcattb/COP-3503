@@ -37,11 +37,11 @@ class Welcome_Window{
     void draw_text();
     void update_username();
 
-
 public:
 
     Welcome_Window(int cols, int rows);
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
+    std::string get_character_name();
 
 };
 

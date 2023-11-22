@@ -16,6 +16,8 @@ void Board::setup_tiles(int rows, int cols, int mines){
 }
 bool Board::board_won(){ 
     // returns of board was won
+    
+    return true;
 }
 
 void Board::reveal_all(){ 

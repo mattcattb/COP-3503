@@ -63,11 +63,16 @@ int Game_Window::event_loop(){
 
     }
 
+    return 0;
 } 
 
 void Game_Window::show_leaderboard(){ 
     // have leaderboard pop up
 
+}
+
+void Game_Window::set_texture_manager(Texture_Manager &manager){
+    texture_manager = &manager;
 }
 
 
@@ -94,11 +99,6 @@ void Game_Window::init_variables(int rows, int cols, int mines, std::string user
 void Game_Window::init_displays(){
     // initialize display elements (timer, number of mines left)
 }
-
-void Game_Window::init_board(){
-    // init board class
-}
-
 
 void Game_Window::init_buttons(){
 

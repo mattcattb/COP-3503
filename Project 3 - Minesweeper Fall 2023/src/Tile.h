@@ -15,7 +15,8 @@ class Tile{
 public:
 
     Tile(int row, int col, bool mine = false);
-    int setup_neighbors(std::vector<std::vector<Tile>> board);
+    
+    void setup_neighbors(std::vector<std::vector<Tile>> board);
 
     // getters 
     bool is_mine(){return _is_mine;};

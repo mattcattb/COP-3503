@@ -34,7 +34,7 @@ class Welcome_Window{
 
     // drawing
     void draw_all();
-    void draw_displays();
+    void draw_text();
 
 
     void update_username();

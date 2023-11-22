@@ -14,10 +14,10 @@ int main(int argc, char ** argv){
     int cols, rows, mines;
     read_config(cols, rows, mines); // read in config info from file 
 
-    Welcome_Window welcome_window(rows, cols);
-
     int state = 0;
-    std::string username; 
+    std::string username; // username of this character
+
+    Welcome_Window welcome_window(rows, cols);
 
     // welcome window
     state = welcome_window.event_loop(); 
@@ -31,7 +31,7 @@ int main(int argc, char ** argv){
     username = welcome_window.get_character_name();
 
     Game_Window game_window(rows, cols, mines, username);
-
+    game_window.
     state = game_window.event_loop();
 
 

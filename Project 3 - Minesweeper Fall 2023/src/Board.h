@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Texture_Manager.h"
 
 class Board{
 

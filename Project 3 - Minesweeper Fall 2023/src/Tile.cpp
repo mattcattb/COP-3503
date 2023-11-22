@@ -48,7 +48,7 @@ int Tile::get_draw_state(){
 
 }
 
-int Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
+void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
     // using board and current location, setup 
     int max_rows = board.size();
     int max_cols = board[0].size();

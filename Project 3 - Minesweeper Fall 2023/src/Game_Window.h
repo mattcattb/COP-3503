@@ -49,6 +49,7 @@ class Game_Window{
 public:
 
     Game_Window(int rows, int cols, int mines, std::string username);
+    void set_texture_manager(Texture_Manager &manager);
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
 
     void show_leaderboard(); // have leaderboard pop up

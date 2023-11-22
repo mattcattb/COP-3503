@@ -55,8 +55,7 @@ int Welcome_Window::event_loop(){
                     return 1;
                 }
 
-                std::cout << character_name << std::endl;
-
+                update_username();
                 break;
 
             default:
@@ -66,9 +65,6 @@ int Welcome_Window::event_loop(){
 
         // clear all 
         render_window.clear(sf::Color::Blue);
-
-        // update username
-        update_username();
 
         // draw and display all!
         draw_all();

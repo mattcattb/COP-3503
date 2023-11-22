@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Board.h"
+#include <string>
 
 class Game_Window{
 
@@ -8,6 +9,7 @@ class Game_Window{
     int _height, _width, _mines;
     int _cols, _rows;
 
+    std::string _username;
     
     // game states
     bool paused;
@@ -33,13 +35,19 @@ class Game_Window{
     // init functions
     void init_fonts();
     void init_window();
-    void init_variables(int cols, int rows);
+    void init_variables(int cols, int rows, int mines, std::string username);
     void init_text();
     void init_buttons();
 
+    // draw functions
+    void draw_all();
+    void draw_fonts();
+    void draw_buttons();
+    void draw_text();
+
 public:
 
-    Game_Window(int cols, int rows, int mines);
+    Game_Window(int cols, int rows, int mines, std::string username);
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
 
     void show_leaderboard(); // have leaderboard pop up

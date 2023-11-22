@@ -1,7 +1,7 @@
 #include "Welcome_Window.h"
 
 
-Welcome_Window::Welcome_Window(int cols, int rows){
+Welcome_Window::Welcome_Window(int rows, int cols){
     // constructor for Welcome Window
 
     init_variables(cols, rows);
@@ -98,7 +98,7 @@ void Welcome_Window::init_window(){
 }
 
 
-void Welcome_Window::init_variables(int cols, int rows){
+void Welcome_Window::init_variables(int rows, int cols){
     // init all variables
 
     _height = rows*32 + 100;

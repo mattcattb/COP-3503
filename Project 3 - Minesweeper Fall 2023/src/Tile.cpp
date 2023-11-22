@@ -10,9 +10,42 @@ Tile::Tile(int row, int col, bool mine){
 int Tile::get_adjacent_mines(){
     // returns number of hidden mines by cycling through neighbords
     int num_adjacent = 0;
+
     for(int i = 0; i < 8; i += 1){
-        if (neighbors[i] != nullptr && )
+        if (neighbors[i] != nullptr && neighbors[i]->is_mine()){
+            num_adjacent += 1;
+        }
     }
+
+    return num_adjacent;
+}
+
+int Tile::get_draw_state(){ 
+    // returns state to be drawn
+    // STATES: 
+    // -3: has flag, -2: hidden tile, -1: REVEALED MINE 
+    // 0-8: revealed tile (how many mines nearby)
+    // -4: something went wrong 
+
+    int adjacent_mines = get_adjacent_mines();
+
+    if (_has_flag){
+        // return it having a flag
+        return -3;
+    }
+
+    if (_revealed == false){
+        // hidden tile, return -2
+        return -2;
+
+    }
+
+    if(_is_mine == true){
+        return -1;
+    }
+
+    return adjacent_mines;
+
 }
 
 int Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
@@ -49,6 +82,10 @@ int Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
     }
 }
 
+void Tile::reveal(){ 
+    // set tile state to reveal
+    _revealed = true;
+}
 
 // init functions
 
@@ -62,8 +99,6 @@ void Tile::init_variables(int row, int col, bool mine){
     _revealed = false;
     _is_mine = mine;
     _has_flag = false;
-    adjacent_tiles = 0;
-    adjacent_mines = 0;
 
 }
 

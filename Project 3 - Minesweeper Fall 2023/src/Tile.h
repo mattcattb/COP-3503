@@ -5,7 +5,6 @@ class Tile{
 
     bool _revealed, _is_mine, _has_flag;
 
-    int adjacent_tiles, adjacent_mines;
     int _row, _col; // row,col location of tile
 
     Tile* neighbors[8];
@@ -22,6 +21,8 @@ public:
     bool is_mine(){return _is_mine;};
     int get_adjacent_mines(); // returns number of hidden mines
     int get_draw_state(); // returns state to be drawn
+
+    void reveal(); // set tile state to reveal
 
 };
 

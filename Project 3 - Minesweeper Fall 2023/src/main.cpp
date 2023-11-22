@@ -1,10 +1,11 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <string>
 #include <vector>
 
 #include "Welcome_Window.h"
+#include "Game_Window.h"
+#include "Texture_Manager.h"
 
 void read_config(int &cols, int &rows, int &mines);
 
@@ -13,7 +14,7 @@ int main(int argc, char ** argv){
     int cols, rows, mines;
     read_config(cols, rows, mines); // read in config info from file 
 
-    Welcome_Window welcome_window(cols, rows);
+    Welcome_Window welcome_window(rows, cols);
 
     int state = 0;
     std::string username; 
@@ -29,7 +30,10 @@ int main(int argc, char ** argv){
     // go into game part now
     username = welcome_window.get_character_name();
 
-    
+    Game_Window game_window(rows, cols, mines, username);
+
+    state = game_window.event_loop();
+
 
     // game loop
     return 0;

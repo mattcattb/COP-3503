@@ -7,7 +7,7 @@ class Welcome_Window{
 
     // variables
     int _height, _width;
-    int _cols, _rows;
+    int _rows, _cols;
 
     std::string character_name;
 
@@ -25,7 +25,7 @@ class Welcome_Window{
     // init welcome window objects
     void init_fonts();
     void init_window();
-    void init_variables(int cols, int rows);
+    void init_variables(int rows, int cols);
     void init_text();
 
     // helpers
@@ -34,12 +34,14 @@ class Welcome_Window{
 
     // drawing
     void draw_all();
-    void draw_text();
+    void draw_displays();
+
+
     void update_username();
 
 public:
 
-    Welcome_Window(int cols, int rows);
+    Welcome_Window(int rows, int cols);
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
     std::string get_character_name();
 

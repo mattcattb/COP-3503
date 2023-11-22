@@ -1,17 +1,17 @@
 #include "Game_Window.h"
 
 
-Game_Window::Game_Window(int cols, int rows, int mines, std::string username){
+Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
 
     // setup board!
 
 
     // initialize parts of display
-    init_variables(cols, rows, mines, username);
+    init_variables(rows, cols, mines, username);
     init_buttons();
     init_window();
-    init_text();
-    
+    init_displays();
+    init_board();
 
 }
 
@@ -51,6 +51,9 @@ int Game_Window::event_loop(){
                 break;
             }
         }
+
+        // update everything (buttons, board, etc)
+
         render_window.clear(sf::Color::White);
 
         // draw everything
@@ -70,13 +73,15 @@ void Game_Window::show_leaderboard(){
 
 // =========== init functions ===========
 
-void Game_Window::init_fonts(){
-
+void Game_Window::init_board(){
+    // initialized stored board class
 }
+
 void Game_Window::init_window(){
     render_window.create(sf::VideoMode(_width, _height), "game", sf::Style::Close);
 }
-void Game_Window::init_variables(int cols, int rows, int mines, std::string username){
+
+void Game_Window::init_variables(int rows, int cols, int mines, std::string username){
     _username = username;
     _cols = cols;
     _rows = rows;
@@ -84,11 +89,39 @@ void Game_Window::init_variables(int cols, int rows, int mines, std::string user
     _height = _rows*32 + 100;
     _width = _cols*32;
     paused = false;
-} 
-void Game_Window::init_text(){
-
 }
+
+void Game_Window::init_displays(){
+    // initialize display elements (timer, number of mines left)
+}
+
+void Game_Window::init_board(){
+    // init board class
+}
+
+
 void Game_Window::init_buttons(){
+
+    sf::Texture happy_texture = texture_manager->getTexture("face_happy");
+    sf::Texture debug_texture = texture_manager->getTexture("debug");
+    sf::Texture leaderboard_texture = texture_manager->getTexture("leaderboard");
+    sf::Texture pause_texture = texture_manager->getTexture("pause");
+
+    // happy face button (cols/2.0 *32) - 32, 32*(rows+0.5)
+    happy_button.setTexture(happy_texture);
+    happy_button.setPosition((_cols/2.0 * 32)-32, 32*(_rows+0.5));
+
+    // debug button
+    debug_button.setTexture(debug_texture);
+    debug_button.setPosition((_cols*32)-304, 32*(_rows+0.5));
+
+    // leaderboard_texture
+    leaderboard_button.setTexture(leaderboard_texture);
+    leaderboard_button.setPosition(_cols*32-176,(_rows+0.5)*32);
+
+    // pause play button
+    pause_play_button.setTexture(pause_texture);
+    pause_play_button.setPosition(_cols*32-240, (_rows+0.5)*32);
 
 }
 
@@ -97,7 +130,8 @@ void Game_Window::init_buttons(){
 void Game_Window::draw_all(){
     draw_fonts();
     draw_buttons();
-    draw_text();
+    draw_board();
+    draw_displays();
 
 }
 void Game_Window::draw_fonts(){
@@ -105,7 +139,17 @@ void Game_Window::draw_fonts(){
 }
 void Game_Window::draw_buttons(){
 
-}
-void Game_Window::draw_text(){
+    render_window.draw(happy_button);
+    render_window.draw(counter);
+    render_window.draw(debug_button);
+    render_window.draw(pause_play_button);
+    render_window.draw(leaderboard_button);
 
+}
+void Game_Window::draw_displays(){
+
+}
+
+void Game_Window::draw_board(){
+    board.draw_tiles(render_window);
 }

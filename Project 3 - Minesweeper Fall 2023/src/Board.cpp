@@ -18,12 +18,26 @@ bool Board::board_won(){
     // returns of board was won
 }
 
-void Board::show_board(){ // reveal every tile on board
+void Board::reveal_all(){ 
+    // reveal every tile on board
+    for(int row = 0; row < _rows; row += 1){
+        for(int col = 0; col < _cols; col += 1){
+            tile_vector[row][col].reveal();
+        }
+    }
 
 }
 
-void Board::draw_board(){ 
-    // draw board?
+void Board::draw_tiles(sf::RenderWindow &window){ 
+    // draw each tile in board
+
+    for(int row = 0; row < _rows; row += 1){
+        for(int col = 0; col < _cols; col += 1){
+
+            
+
+        }
+    }
 }
 
 // init functions

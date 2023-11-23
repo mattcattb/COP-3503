@@ -31,7 +31,6 @@ int main(int argc, char ** argv){
     username = welcome_window.get_character_name();
 
     Game_Window game_window(rows, cols, mines, username);
-    game_window.
     state = game_window.event_loop();
 
 

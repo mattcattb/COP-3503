@@ -26,11 +26,13 @@ int main(int argc, char ** argv){
         // immediatly end program
         return 0;
     }
-
+    
     // go into game part now
     username = welcome_window.get_character_name();
 
     Game_Window game_window(rows, cols, mines, username);
+    std::cout << "helllo" << std::endl;
+    
     state = game_window.event_loop();
 
 

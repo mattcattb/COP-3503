@@ -4,8 +4,6 @@
 Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
 
     // setup board!
-
-
     // initialize parts of display
     init_variables(rows, cols, mines, username);
     init_buttons();
@@ -26,6 +24,7 @@ int Game_Window::event_loop(){
         while(render_window.pollEvent(event)){
             switch (event.type)
             {
+            
             case sf::Event::Closed:
                 // window closed!
                 render_window.close();
@@ -128,6 +127,7 @@ void Game_Window::init_buttons(){
 // =========== draw functions ===========
 
 void Game_Window::draw_all(){
+
     draw_fonts();
     draw_buttons();
     draw_board();

@@ -50,8 +50,11 @@ int Welcome_Window::event_loop(){
                     // add letter to character name
                     character_name.push_back(c);
 
-                }else if (event.key.code == sf::Keyboard::Enter && character_name.length() > 0){
+                }
+
+                if (event.text.unicode == 13 && character_name.length() > 0){
                     // enter key pressed and character length is greater then 0, go into game mode
+                    render_window.close();
                     return 1;
                 }
 

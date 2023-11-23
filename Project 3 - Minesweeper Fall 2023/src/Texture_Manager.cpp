@@ -10,7 +10,7 @@ sf::Texture& Texture_Manager::getTexture(std::string textureName){
     if (result == textures.end()){
         // texture does not already exist in the map, go get it
         sf::Texture newTexture;
-        newTexture.loadFromFile("images/" + textureName + ".png");
+        newTexture.loadFromFile("files/images/" + textureName + ".png");
         textures[textureName] = newTexture;
         return textures[textureName];
     }else{

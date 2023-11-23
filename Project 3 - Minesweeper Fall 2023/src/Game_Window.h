@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Texture_Manager.h"
 #include <string>
+#include <iostream>
 
 class Game_Window{
 

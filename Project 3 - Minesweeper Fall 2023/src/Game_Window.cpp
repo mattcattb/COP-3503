@@ -10,7 +10,7 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
     init_window();
     init_displays();
     init_board();
-
+    
 }
 
 int Game_Window::event_loop(){
@@ -101,25 +101,20 @@ void Game_Window::init_displays(){
 
 void Game_Window::init_buttons(){
 
-    sf::Texture happy_texture = texture_manager->getTexture("face_happy");
-    sf::Texture debug_texture = texture_manager->getTexture("debug");
-    sf::Texture leaderboard_texture = texture_manager->getTexture("leaderboard");
-    sf::Texture pause_texture = texture_manager->getTexture("pause");
-
     // happy face button (cols/2.0 *32) - 32, 32*(rows+0.5)
-    happy_button.setTexture(happy_texture);
+    happy_button.setTexture(texture_manager->getTexture("face_happy"));
     happy_button.setPosition((_cols/2.0 * 32)-32, 32*(_rows+0.5));
 
     // debug button
-    debug_button.setTexture(debug_texture);
+    debug_button.setTexture(texture_manager->getTexture("debug"));
     debug_button.setPosition((_cols*32)-304, 32*(_rows+0.5));
 
     // leaderboard_texture
-    leaderboard_button.setTexture(leaderboard_texture);
+    leaderboard_button.setTexture(texture_manager->getTexture("leaderboard"));
     leaderboard_button.setPosition(_cols*32-176,(_rows+0.5)*32);
 
     // pause play button
-    pause_play_button.setTexture(pause_texture);
+    pause_play_button.setTexture(texture_manager->getTexture("pause"));
     pause_play_button.setPosition(_cols*32-240, (_rows+0.5)*32);
 
 }
@@ -128,15 +123,12 @@ void Game_Window::init_buttons(){
 
 void Game_Window::draw_all(){
 
-    draw_fonts();
     draw_buttons();
     draw_board();
     draw_displays();
 
 }
-void Game_Window::draw_fonts(){
 
-}
 void Game_Window::draw_buttons(){
 
     render_window.draw(happy_button);

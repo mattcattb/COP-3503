@@ -1,9 +1,11 @@
 #include "Tile.h"
 
-Tile::Tile(int row, int col, bool mine){
+Tile::Tile(int row, int col, bool mine, Texture_Manager &manager){
 
-    init_variables(row, col, mine);
-    init_neighbors();
+    init_variables(row, col, mine); // init tiles variables
+    init_neighbors(); // set all neighbors to nullptr first
+    texture_manager = &manager;
+    set_sprite(); // set sprite to hidden
 
 }
 
@@ -107,4 +109,10 @@ void Tile::init_neighbors(){
     for(int i = 0; i < 8; i += 1){
         neighbors[i] = nullptr;
     }
+}
+
+void Tile::set_sprite(){
+    // sets sprite according to state of tile
+
+
 }

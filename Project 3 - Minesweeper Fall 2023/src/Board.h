@@ -11,10 +11,13 @@ class Board{
 
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]
 
-
     // helpers
-    void init_board(int rows, int cols);
+    void init_board(int rows, int cols, Texture_Manager &manager);
     void init_mines(int mines);
+
+    int side_length(sf::RenderWindow &window); // calculate side len
+
+
 
 public:
 
@@ -23,7 +26,7 @@ public:
     
     bool board_won(); // determines if board won
     void reveal_all(); // set every tile to revealed
-    void draw_tiles(sf::RenderWindow &window); // draw each tile in board
+    void draw_tiles(sf::RenderWindow &window, Texture_Manager &manger); // draw each tile in board
 
 };
 

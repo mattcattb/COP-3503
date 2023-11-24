@@ -12,7 +12,7 @@ void read_config(int &cols, int &rows, int &mines);
 int main(int argc, char ** argv){
 
     int cols, rows, mines;
-    read_config(cols, rows, mines); // read in config info from file 
+    read_config(rows, cols, mines); // read in config info from file 
 
     int state = 0;
     std::string username; // username of this character
@@ -31,7 +31,6 @@ int main(int argc, char ** argv){
     username = welcome_window.get_character_name();
 
     Game_Window game_window(rows, cols, mines, username);
-    std::cout << "helllo" << std::endl;
     
     state = game_window.event_loop();
 
@@ -41,7 +40,7 @@ int main(int argc, char ** argv){
 }
 
 
-void read_config(int &cols, int &rows, int &mines){
+void read_config(int &rows, int &cols, int &mines){
     
     std::ifstream config_fin("files/board_config.cfg");
     std::string buffer;

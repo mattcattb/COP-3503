@@ -14,7 +14,7 @@ class Game_Window{
 
     std::string _username;
 
-    Board board;
+    Board *board;
 
     Texture_Manager* texture_manager;
 
@@ -42,10 +42,10 @@ class Game_Window{
 
     // draw functions
     void draw_all();
-    void draw_fonts();
     void draw_buttons();
     void draw_displays();
     void draw_board();
+
 
 public:
 

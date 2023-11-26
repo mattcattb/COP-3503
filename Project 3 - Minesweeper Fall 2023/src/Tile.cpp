@@ -1,13 +1,42 @@
 #include "Tile.h"
 
-Tile::Tile(int row, int col, bool mine, Texture_Manager &manager){
+Tile::Tile(int row, int col, Texture_Manager &manager){
 
-    init_variables(row, col, mine); // init tiles variables
+    init_variables(row, col); // init tiles variables
     init_neighbors(); // set all neighbors to nullptr first
-    texture_manager = &manager;
-    set_sprite(); // set sprite to hidden
+    texture_manager = &manager; // set texture manager
 
 }
+
+// init functions
+
+void Tile::init_variables(int row, int col){
+
+    // set the row, col of that tile 
+    _row = row;
+    _col = col;
+
+    _is_mine = false;
+    
+    // set variables
+    _revealed = false;
+    _has_flag = false;
+
+    // find the x and y position of tile 
+    _xpos = 32*(_col + 0.5);
+    _ypos = 32*(_row + 0.5);
+
+}
+
+void Tile::init_neighbors(){
+    // set all surrounding tiles to null (for now)
+    for(int i = 0; i < 8; i += 1){
+        neighbors[i] = nullptr;
+    }
+}
+
+
+// information getters
 
 int Tile::get_adjacent_mines(){
     // returns number of hidden mines by cycling through neighbords
@@ -20,34 +49,6 @@ int Tile::get_adjacent_mines(){
     }
 
     return num_adjacent;
-}
-
-int Tile::get_draw_state(){ 
-    // returns state to be drawn
-    // STATES: 
-    // -3: has flag, -2: hidden tile, -1: REVEALED MINE 
-    // 0-8: revealed tile (how many mines nearby)
-    // -4: something went wrong 
-
-    int adjacent_mines = get_adjacent_mines();
-
-    if (_has_flag){
-        // return it having a flag
-        return -3;
-    }
-
-    if (_revealed == false){
-        // hidden tile, return -2
-        return -2;
-
-    }
-
-    if(_is_mine == true){
-        return -1;
-    }
-
-    return adjacent_mines;
-
 }
 
 void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
@@ -84,35 +85,67 @@ void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
     }
 }
 
-void Tile::reveal(){ 
-    // set tile state to reveal
-    _revealed = true;
-}
+// sprite loading
 
-// init functions
+void Tile::set_loader(){
+    // setup sprite loader vector according to state
 
-void Tile::init_variables(int row, int col, bool mine){
+    // first, clear previous sprite loader
+    sprite_loader.clear(); 
 
-    // set the row, col of that tile 
-    _row = row;
-    _col = col;
-    
-    // set variables
-    _revealed = false;
-    _is_mine = mine;
-    _has_flag = false;
+    // store tile position on board
+    sf::Vector2f tile_position(_xpos, _ypos);
 
-}
+    if (!_revealed){
+        // if hidden, just add a hidden tile sprite (and flag if needed) 
+        add_sprite("tile_hidden");
+        
+        if (_has_flag){
+            // if tile has a flag, also add this flag on top too
+            add_sprite("flag");
+        }
 
-void Tile::init_neighbors(){
-    // set all surrounding tiles to null (for now)
-    for(int i = 0; i < 8; i += 1){
-        neighbors[i] = nullptr;
+        // finished adding all, leave
+        return;
+
+    }else if (_revealed){
+        // if revealed, add a shown tile
+        add_sprite("tile_revealed");
     }
+    
+    if (_is_mine){
+        // put a mine on top!
+        add_sprite("mine");
+
+    }else {
+        // tile is not a mine, so must display its number. 
+        int neighbors = get_adjacent_mines();
+        
+        if (neighbors > 0){
+            // draw the number on top!
+            std::string image_location = "number_" + neighbors;
+            add_sprite(image_location);
+        }
+    }
+
 }
 
-void Tile::set_sprite(){
-    // sets sprite according to state of tile
+void Tile::draw(sf::RenderWindow &window){
+    // draw each sprite in sprite_loader
 
+    for(int i = 0; i < sprite_loader.size(); i += 1){
+        sf::Sprite *cur_sprite = sprite_loader[i];
+        window.draw(*cur_sprite);
+    }
 
+}
+
+// helpers I guess
+
+void Tile::add_sprite(std::string texture_name){
+    // creates and adds sprite to sprite_loader 
+    sf::Sprite * new_sprite = new sf::Sprite();
+    new_sprite->setTexture(texture_manager->getTexture(texture_name));
+    new_sprite->setPosition(sf::Vector2f(_xpos, _ypos)); 
+    sprite_loader.push_back(new_sprite);
 }

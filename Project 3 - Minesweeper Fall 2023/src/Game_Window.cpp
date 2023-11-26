@@ -79,6 +79,7 @@ void Game_Window::set_texture_manager(Texture_Manager &manager){
 
 void Game_Window::init_board(){
     // initialized stored board class
+    board = new Board(_rows, _cols, _mines, *texture_manager);
 }
 
 void Game_Window::init_window(){
@@ -143,5 +144,5 @@ void Game_Window::draw_displays(){
 }
 
 void Game_Window::draw_board(){
-    board.draw_tiles(render_window);
+    // board->draw_tiles(render_window);
 }

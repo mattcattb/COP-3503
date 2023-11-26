@@ -11,22 +11,24 @@ class Board{
 
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]
 
-    // helpers
-    void init_board(int rows, int cols, Texture_Manager &manager);
-    void init_mines(int mines);
+    // initialize board and place mines
+    void init_board(Texture_Manager &manager);
+    void init_board_neighbors();
 
-    int side_length(sf::RenderWindow &window); // calculate side len
-
-
+    void randomize_mines(int mines);
 
 public:
 
-    Board();
-    void setup_tiles(int rows, int cols, int mines);
+    Board(int rows, int cols, int mines, Texture_Manager &manager);
     
+    // get information on board
     bool board_won(); // determines if board won
+    
+    // change board state
     void reveal_all(); // set every tile to revealed
-    void draw_tiles(sf::RenderWindow &window, Texture_Manager &manger); // draw each tile in board
+
+    // draw board
+    void draw_tiles(sf::RenderWindow &window); // draw each tile in board
 
 };
 

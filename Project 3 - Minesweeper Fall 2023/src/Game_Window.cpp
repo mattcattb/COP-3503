@@ -59,14 +59,15 @@ int Game_Window::event_loop(){
                     board->update_board(mouse_pos, left_click);
                 }
 
+                // check buttons
+                update_clickable_buttons(mouse_pos);
+
                 break;
 
             default:
                 break;
             }
         }
-
-        update_all();
 
         render_window.clear(sf::Color::White);
 
@@ -134,8 +135,12 @@ void Game_Window::init_buttons(){
 
 // =========== update functions =========
 
-void Game_Window::update_all(){
+void Game_Window::update_clickable_buttons(sf::Vector2i mouse_position){
+    // update buttons using mouse position if not pressed!
 
+    // clickable buttons are: debug button, pause/play button, leaderboard button
+    
+     
 }
 
 

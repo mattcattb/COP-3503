@@ -40,7 +40,7 @@ class Game_Window{
     void init_buttons();
 
     // update functions 
-    void update_all();
+    void update_clickable_buttons(sf::Vector2i mouse_position);
 
     // draw functions
     void draw_all();

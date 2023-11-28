@@ -142,7 +142,7 @@ void Tile::draw(sf::RenderWindow &window){
 
 }
 
-// helpers I guess
+// ============ helpers I guess
 
 void Tile::add_sprite(std::string texture_name){
     // creates and adds sprite to sprite_loader, setting position 
@@ -152,7 +152,7 @@ void Tile::add_sprite(std::string texture_name){
     sprite_loader.push_back(new_sprite);
 }
 
-// debugging
+// ============ debugging
 
 void Tile::print_tile(){
     std::cout << std::endl;
@@ -162,3 +162,19 @@ void Tile::print_tile(){
     std::cout << std::endl;
 }
 
+// ============ State Changers ============
+
+int Tile::toggle_flag(){
+    // toggle flag maybe?
+    int return_val = 0;
+    if (_has_flag == true){
+        // we are removing a flag, add to mine counter
+        return_val = 1;
+    }else if (_has_flag == false){
+        // we are adding a flag, so subtract from mine counter
+        return_val = -1;
+    }
+    _has_flag = !_has_flag;
+    
+    return return_val;
+}

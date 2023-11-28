@@ -7,7 +7,7 @@
 class Board{
 
     int _mines, _rows, _cols;
-    int counter; // how many flags placed
+    int counter; // what counter should display (starts at num mines)
 
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]
 

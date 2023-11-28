@@ -20,9 +20,6 @@ class Tile{
     void set_neighbors_null(); // set all neighbors null
     void calculate_position(); // find the x and y position of tile 
 
-    // set sprite loader according to state
-    void set_loader();
-
     // helper to get drawing state
     void add_sprite(std::string texture_name);
 
@@ -37,14 +34,18 @@ public:
     // state changers
     void become_mine(){_is_mine = true;}; // turns tile into a mine
     void reveal(){_revealed = true;}; // set tile state to reveal
-    void toggle_flag(){_has_flag = !_has_flag;}; // add or remove flag
+    int toggle_flag(); // add or remove flag, returning to add to counter
 
     // getters 
     bool is_mine(){return _is_mine;};
+    bool flag_placed(){return _has_flag;};
     int get_adjacent_mines(); // returns number of hidden mines
 
     // debugging
     void print_tile();
+
+    // set sprite loader according to state
+    void set_loader();
 
 };
 

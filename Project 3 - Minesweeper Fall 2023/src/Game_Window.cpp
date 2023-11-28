@@ -9,19 +9,30 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
     init_buttons();
     init_window();
     init_displays();
+    std::cout << "init board\n";
     init_board();
+    std::cout << "finished all\n";
     
+}
+
+Game_Window::~Game_Window(){
+    delete board;
 }
 
 int Game_Window::event_loop(){
 
     // returns -1 to say the window is closed, 1 to say to switch to game view
 
+    std::cout << "In game loop!\n";
+
     while (render_window.isOpen())
     {
         sf::Event event;
         
         while(render_window.pollEvent(event)){
+            bool left_click;
+            sf::Vector2i mouse_pos;
+
             switch (event.type)
             {
             
@@ -30,28 +41,32 @@ int Game_Window::event_loop(){
                 render_window.close();
                 
                 return -1;
+
+                break;
                             
             case sf::Event::MouseButtonPressed:
-                switch (event.key.code)
-                {
-                case sf::Mouse::Left:
-                    // left key pressed
-                    break;
                 
-                case sf::Mouse::Right:
-                    // right key pressed
-                    break;
+                // get mouse position of pressed mouse
+                mouse_pos = sf::Mouse::getPosition(render_window);
+                
+                std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
 
-                default:
-                    break;
+                // get if left or right click
+                left_click = (event.mouseButton.button == sf::Mouse::Left);
+
+                // if tile clicked, update board
+                if (tile_clicked(mouse_pos)){
+                    board->update_board(mouse_pos, left_click);
                 }
+
+                break;
 
             default:
                 break;
             }
         }
 
-        // update everything (buttons, board, etc)
+        update_all();
 
         render_window.clear(sf::Color::White);
 
@@ -70,16 +85,13 @@ void Game_Window::show_leaderboard(){
 
 }
 
-void Game_Window::set_texture_manager(Texture_Manager &manager){
-    texture_manager = &manager;
-}
-
-
 // =========== init functions ===========
 
 void Game_Window::init_board(){
     // initialized stored board class
     board = new Board(_rows, _cols, _mines, *texture_manager);
+    std::cout << "CREATED BOARD!\n";
+    
 }
 
 void Game_Window::init_window(){
@@ -120,6 +132,13 @@ void Game_Window::init_buttons(){
 
 }
 
+// =========== update functions =========
+
+void Game_Window::update_all(){
+
+}
+
+
 // =========== draw functions ===========
 
 void Game_Window::draw_all(){
@@ -144,5 +163,20 @@ void Game_Window::draw_displays(){
 }
 
 void Game_Window::draw_board(){
-    // board->draw_tiles(render_window);
+    board->draw_tiles(render_window);
+}
+
+
+// ======== helpers ==========
+
+bool Game_Window::tile_clicked(sf::Vector2i mouse_pos){
+    int x = mouse_pos.x;
+    int y = mouse_pos.y;
+
+    if (x <= _cols*32 && y <= _rows*32){
+        return true;
+    }else{
+        return false;
+    }    
+
 }

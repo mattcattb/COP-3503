@@ -12,15 +12,17 @@ class Board{
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]
 
     // initialize board and place mines
-    void init_board(Texture_Manager &manager);
-    void init_board_neighbors();
-
+    void create_empty_board(Texture_Manager &manager);
+    void set_board_neighbors();
     void randomize_mines(int mines);
 
 public:
 
     Board(int rows, int cols, int mines, Texture_Manager &manager);
     
+    // update each tiles states?
+    void update_board(sf::Vector2i mouse_pos, bool left_click);
+
     // get information on board
     bool board_won(); // determines if board won
     
@@ -29,6 +31,9 @@ public:
 
     // draw board
     void draw_tiles(sf::RenderWindow &window); // draw each tile in board
+
+    // debugging
+    void print_board(); // print all tiles in board
 
 };
 

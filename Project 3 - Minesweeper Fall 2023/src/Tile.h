@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Texture_Manager.h"
+#include <iostream>
 
 class Tile{
 
@@ -16,7 +17,7 @@ class Tile{
     std::vector<sf::Sprite*> sprite_loader;
 
     void init_variables(int row, int col); // setup all variables
-    void init_neighbors(); // set all neighbors null
+    void set_neighbors_null(); // set all neighbors null
     void calculate_position(); // find the x and y position of tile 
 
     // set sprite loader according to state
@@ -31,16 +32,19 @@ public:
 
     void setup_neighbors(std::vector<std::vector<Tile>> board);
 
-    void Tile::set_loader(); // setup sprite loader according to state
-    void Tile::draw(sf::RenderWindow &window); // draw all loaded sprites
+    void draw(sf::RenderWindow &window); // draw all loaded sprites
 
     // state changers
     void become_mine(){_is_mine = true;}; // turns tile into a mine
     void reveal(){_revealed = true;}; // set tile state to reveal
+    void toggle_flag(){_has_flag = !_has_flag;}; // add or remove flag
 
     // getters 
     bool is_mine(){return _is_mine;};
     int get_adjacent_mines(); // returns number of hidden mines
+
+    // debugging
+    void print_tile();
 
 };
 

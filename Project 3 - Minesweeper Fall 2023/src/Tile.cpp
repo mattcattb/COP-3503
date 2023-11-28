@@ -3,8 +3,11 @@
 Tile::Tile(int row, int col, Texture_Manager &manager){
 
     init_variables(row, col); // init tiles variables
-    init_neighbors(); // set all neighbors to nullptr first
+    set_neighbors_null(); // set all neighbors to nullptr first
     texture_manager = &manager; // set texture manager
+
+    // set loader (should be empty tile)
+    set_loader();
 
 }
 
@@ -23,18 +26,17 @@ void Tile::init_variables(int row, int col){
     _has_flag = false;
 
     // find the x and y position of tile 
-    _xpos = 32*(_col + 0.5);
-    _ypos = 32*(_row + 0.5);
+    _xpos = 32*(_col);
+    _ypos = 32*(_row);
 
 }
 
-void Tile::init_neighbors(){
+void Tile::set_neighbors_null(){
     // set all surrounding tiles to null (for now)
     for(int i = 0; i < 8; i += 1){
         neighbors[i] = nullptr;
     }
 }
-
 
 // information getters
 
@@ -57,9 +59,9 @@ void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
     int max_cols = board[0].size();
 
     int placement = 0;
-
+    
     for(int i = -1; i <= 1; i += 1 ){
-        for(int j = -1; i <= 1; j += 1){
+        for(int j = -1; j <= 1; j += 1){
             if (i == 0 && j == 0){
                 // skip the case where we look at our own tile
                 continue;
@@ -132,7 +134,7 @@ void Tile::set_loader(){
 
 void Tile::draw(sf::RenderWindow &window){
     // draw each sprite in sprite_loader
-
+    set_loader(); // set vector of sprites to draw
     for(int i = 0; i < sprite_loader.size(); i += 1){
         sf::Sprite *cur_sprite = sprite_loader[i];
         window.draw(*cur_sprite);
@@ -143,9 +145,20 @@ void Tile::draw(sf::RenderWindow &window){
 // helpers I guess
 
 void Tile::add_sprite(std::string texture_name){
-    // creates and adds sprite to sprite_loader 
+    // creates and adds sprite to sprite_loader, setting position 
     sf::Sprite * new_sprite = new sf::Sprite();
     new_sprite->setTexture(texture_manager->getTexture(texture_name));
     new_sprite->setPosition(sf::Vector2f(_xpos, _ypos)); 
     sprite_loader.push_back(new_sprite);
 }
+
+// debugging
+
+void Tile::print_tile(){
+    std::cout << std::endl;
+    std::cout << "revealed: " << _revealed << " is_mine: " << _is_mine << " has_flag: " << _has_flag << std::endl;
+    std::cout << "_row, _col: (" << _row << ", " << _col << ")\n";
+    std::cout << "_xpos, _ypos: (" << _xpos << ", " << _ypos << ")\n";   
+    std::cout << std::endl;
+}
+

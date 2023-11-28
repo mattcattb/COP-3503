@@ -29,9 +29,9 @@ int main(int argc, char ** argv){
     
     // go into game part now
     username = welcome_window.get_character_name();
-
+ 
     Game_Window game_window(rows, cols, mines, username);
-    
+
     state = game_window.event_loop();
 
 

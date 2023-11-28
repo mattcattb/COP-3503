@@ -30,7 +30,6 @@ class Game_Window{
     sf::Sprite leaderboard_button;
 
     // timer
-
     sf::RenderWindow render_window;
 
     // init functions
@@ -40,17 +39,23 @@ class Game_Window{
     void init_displays();
     void init_buttons();
 
+    // update functions 
+    void update_all();
+
     // draw functions
     void draw_all();
     void draw_buttons();
     void draw_displays();
     void draw_board();
 
+    // helpers
+    bool tile_clicked(sf::Vector2i mouse_pos); // bool if tile clicked
 
 public:
 
     Game_Window(int rows, int cols, int mines, std::string username);
-    void set_texture_manager(Texture_Manager &manager);
+    ~Game_Window();
+
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
 
     void show_leaderboard(); // have leaderboard pop up

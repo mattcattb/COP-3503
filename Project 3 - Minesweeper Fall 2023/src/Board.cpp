@@ -42,7 +42,27 @@ void Board::create_empty_board(Texture_Manager &manager){
 }
 
 void Board::randomize_mines(int mines){
+
+        // Create a random number generator engine
+    std::random_device rd; // Obtain a random seed from the hardware
+    std::mt19937 gen(rd()); // Mersenne Twister 19937 generator
+
+    // Define a distribution (e.g., uniform integer distribution)
+    std::uniform_int_distribution<int> cols_distribution(0, _cols); // Range from 1 to 6 (inclusive)
+    std::uniform_int_distribution<int> rows_distribution(0, _rows);
+
     
+    for(int i = 0; i < mines; i += 1){
+
+        int rand_col, rand_row;
+
+        do{
+            rand_col = cols_distribution(gen);
+            rand_row = rows_distribution(gen);
+        }while(tile_vector[rand_row][rand_col].is_mine());
+        // now, rand_col and rand_row are not a mine, so make it into a mine
+        tile_vector[rand_row][rand_col].become_mine();
+    }
 
 }
 

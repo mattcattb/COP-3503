@@ -166,6 +166,12 @@ void Tile::print_tile(){
 
 int Tile::toggle_flag(){
     // toggle flag maybe?
+
+    // remember, if revealed we CANNOT add a flag
+    if (_revealed){
+        return 0;
+    }
+
     int return_val = 0;
     if (_has_flag == true){
         // we are removing a flag, add to mine counter
@@ -175,6 +181,6 @@ int Tile::toggle_flag(){
         return_val = -1;
     }
     _has_flag = !_has_flag;
-    
+
     return return_val;
 }

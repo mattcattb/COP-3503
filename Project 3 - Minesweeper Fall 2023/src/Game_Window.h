@@ -4,6 +4,16 @@
 #include <string>
 #include <iostream>
 
+//Todo
+/*
+
+    - setup digits counter
+    - integrate timer counter
+    - have leaderboard show everything
+
+*/
+
+
 class Game_Window{
 
 

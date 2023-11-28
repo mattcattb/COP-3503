@@ -3,6 +3,19 @@
 #include "Texture_Manager.h"
 #include <iostream>
 
+
+//Todo
+/*
+
+    - make tiles with flags unrevealable
+    - not let revealed tiles to be flag placed
+    - recursively reveal all other tiles if no mines surround tile
+    - randomly place mines
+    - reveal if game is won 
+
+*/
+
+
 class Tile{
 
     bool _revealed, _is_mine, _has_flag;

@@ -1,8 +1,20 @@
 #pragma once
-#include "Tile.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <random>
+
+#include "Tile.h"
 #include "Texture_Manager.h"
+
+
+//Todo
+/*
+
+    - randomly place mines
+    - maybe smarter updating of each tiles sprite loader
+
+*/
+
 
 class Board{
 

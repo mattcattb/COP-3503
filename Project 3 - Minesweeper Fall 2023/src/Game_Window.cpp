@@ -56,11 +56,21 @@ int Game_Window::event_loop(){
 
                 // if tile clicked, update board
                 if (tile_clicked(mouse_pos)){
-                    board->update_board(mouse_pos, left_click);
-                }
+                    // only update board if not paused
+                    if (!paused){
+                        board->update_board(mouse_pos, left_click);
+                    }
 
-                // check buttons
-                update_clickable_buttons(mouse_pos);
+                }else if (pause_button_clicked(mouse_pos)){
+                    update_pause_button();
+                    
+                }else if(leaderboard_button_clicked(mouse_pos)){
+                    update_pause_button();
+
+                }else if(debug_button_clicked(mouse_pos)){
+                    update_debug_button();
+
+                }
 
                 break;
 
@@ -68,6 +78,10 @@ int Game_Window::event_loop(){
                 break;
             }
         }
+
+        // see if game won!
+
+        // if mine pressed (loss state) reveal all tiles with mines + end game
 
         render_window.clear(sf::Color::White);
 
@@ -135,14 +149,51 @@ void Game_Window::init_buttons(){
 
 // =========== update functions =========
 
-void Game_Window::update_clickable_buttons(sf::Vector2i mouse_position){
-    // update buttons using mouse position if not pressed!
+void Game_Window::update_pause_button(){
+    // toggle pause state
+    paused = !paused;
 
-    // clickable buttons are: debug button, pause/play button, leaderboard button
-    
-     
+    // change pause sprite
+    if (paused){
+        pause_play_button.setTexture(texture_manager->getTexture("pause"));
+    }else{
+        pause_play_button.setTexture(texture_manager->getTexture("play"));
+    }
 }
 
+void Game_Window::update_leaderboard(){
+    // pause game
+    
+    // reveal all tiles 
+    
+    // display leaderboard window
+
+    // when leaderboard window closed, all tiles go to pevious state, resume timer
+
+}
+
+void Game_Window::update_debug_button(){
+    // toggle debug state, either showing all mines or hiding all mines
+    debugging = !debugging;
+
+    if (debugging){
+        // show all mines
+        board->reveal_mines();
+    }else{
+        // hide all mines
+        board->hide_mines();
+    }
+
+    // button should not work when game ends (victory/loss)
+}
+
+void Game_Window::update_happy_face_button(){
+
+    // happyface button was clicked!
+    // restart and re-randomize board
+    board->reset_board(); 
+    
+}
 
 // =========== draw functions ===========
 
@@ -175,13 +226,63 @@ void Game_Window::draw_board(){
 // ======== helpers ==========
 
 bool Game_Window::tile_clicked(sf::Vector2i mouse_pos){
-    int x = mouse_pos.x;
-    int y = mouse_pos.y;
 
-    if (x <= _cols*32 && y <= _rows*32){
+    if (mouse_pos.x <= _cols*32 && mouse_pos.y <= _rows*32){
         return true;
     }else{
         return false;
     }    
 
+}
+
+bool Game_Window::pause_button_clicked(sf::Vector2i mouse_pos){
+    sf::FloatRect pause_bounds = pause_play_button.getLocalBounds();
+    float spriteWidth = pause_bounds.width; // x
+    float spriteHeight = pause_bounds.height; // y 
+    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
+        && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Game_Window::leaderboard_button_clicked(sf::Vector2i mouse_pos){
+    sf::FloatRect leaderboard_bounds = leaderboard_button.getLocalBounds();
+    float spriteWidth = leaderboard_bounds.width; // x
+    float spriteHeight = leaderboard_bounds.height; // y 
+    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
+        && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Game_Window::debug_button_clicked(sf::Vector2i mouse_pos){
+    sf::FloatRect debug_bounds = debug_button.getLocalBounds();
+    float spriteWidth = debug_bounds.width; // x
+    float spriteHeight = debug_bounds.height; // y 
+    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
+        && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Game_Window::happy_face_button_clicked(sf::Vector2i mouse_pos){
+    sf::FloatRect debug_bounds = happy_button.getLocalBounds();
+    float spriteWidth = debug_bounds.width; // x
+    float spriteHeight = debug_bounds.height; // y 
+    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
+        && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
+        return true;
+    }else{
+        return false;
+    }
 }

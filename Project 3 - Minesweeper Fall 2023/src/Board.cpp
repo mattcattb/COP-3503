@@ -10,15 +10,12 @@ Board::Board(int rows, int cols, int mines, Texture_Manager &manager){
     counter = mines;
 
     // set 2D vector of tiles (no mines) 
-    std::cout <<"creating empty board\n";
     create_empty_board(manager);
 
     // set boards neighbors
-    std::cout << "setting board neighbors\n";
     set_board_neighbors();
 
     // place all mines on board
-    std::cout << "placing mines on board\n";
     randomize_mines(mines);
 
 }
@@ -48,8 +45,8 @@ void Board::randomize_mines(int mines){
     std::mt19937 gen(rd()); // Mersenne Twister 19937 generator
 
     // Define a distribution (e.g., uniform integer distribution)
-    std::uniform_int_distribution<int> cols_distribution(0, _cols); // Range from 1 to 6 (inclusive)
-    std::uniform_int_distribution<int> rows_distribution(0, _rows);
+    std::uniform_int_distribution<int> cols_distribution(0, _cols - 1); // Range from 1 to 6 (inclusive)
+    std::uniform_int_distribution<int> rows_distribution(0, _rows - 1);
 
     
     for(int i = 0; i < mines; i += 1){
@@ -78,8 +75,8 @@ void Board::set_board_neighbors(){
 
 // getters 
 
-bool Board::board_won(){ 
-    //! returns of board was won
+int Board::board_state(){ 
+    //TODO -1 board lost, 0 still playing, 1 board solved
     
     return true;
 }
@@ -96,6 +93,35 @@ void Board::reveal_all(){
     }
 
 }
+
+void Board::reveal_mines(){
+    // reveals all mines in board
+    for(int r = 0; r < _rows; r += 1){
+        for (int c = 0; c < _cols; c += 1){
+            if (tile_vector[r][c].is_mine()){
+                tile_vector[r][c].reveal();
+            }
+        }
+    }
+}
+
+void Board::hide_mines(){
+    // hides all mines in board
+
+    for(int r = 0; r < _rows; r += 1){
+        for (int c = 0; c < _cols; c += 1){
+            if (tile_vector[r][c].is_mine()){
+                tile_vector[r][c].hide();
+            }
+        }
+    }
+
+}
+
+void Board::reset_board(){
+    //TODO 
+} 
+
 
 void Board::draw_tiles(sf::RenderWindow &window){ 
     // draw each tile in board
@@ -118,10 +144,11 @@ void Board::update_board(sf::Vector2i mouse_pos, bool left_click){
     
     if (left_click){
         // left click: reveal
-        tile_vector[row_clicked][col_clicked].reveal();
+        tile_vector[row_clicked][col_clicked].left_click();
+
     }else{
         // right click: place/remove flag and also change counter
-        counter += tile_vector[row_clicked][col_clicked].toggle_flag();
+        counter += tile_vector[row_clicked][col_clicked].right_click();
     }
     tile_vector[row_clicked][col_clicked].set_loader();
 }

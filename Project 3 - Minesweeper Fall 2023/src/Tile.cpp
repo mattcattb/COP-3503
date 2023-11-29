@@ -38,7 +38,7 @@ void Tile::set_neighbors_null(){
     }
 }
 
-// information getters
+// ============ information getters
 
 int Tile::get_adjacent_mines(){
     // returns number of hidden mines by cycling through neighbords
@@ -87,7 +87,7 @@ void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
     }
 }
 
-// sprite loading
+// ============ sprite loading
 
 void Tile::set_loader(){
     // setup sprite loader vector according to state
@@ -164,10 +164,24 @@ void Tile::print_tile(){
 
 // ============ State Changers ============
 
-int Tile::toggle_flag(){
-    // toggle flag maybe?
+void Tile::left_click(){ 
+    // reveal tile if tile has no flag placed
+    
+    // dont do anything if there is a flag already there
+    if (_has_flag){
+        return;
+    }
 
-    // remember, if revealed we CANNOT add a flag
+    reveal();
+
+    //TODO if tile is lonely (0 mine neighbors) reveal surrounding lonely tiles recursively
+
+}
+
+int Tile::right_click(){ 
+    // return what to add to counter (1 if removing flag, -1 if adding flag)
+
+    // if revealed, no flag is added
     if (_revealed){
         return 0;
     }
@@ -183,4 +197,22 @@ int Tile::toggle_flag(){
     _has_flag = !_has_flag;
 
     return return_val;
+}
+
+void Tile::become_mine(){
+    // set tile to mine
+    _is_mine = true;
+    // remove flag
+    _has_flag = false;
+}
+
+void Tile::reveal(){
+    // set tile state to reveal and remove flag
+    _has_flag = false;
+    _revealed = true; 
+
+} 
+
+void Tile::hide(){
+    _revealed = false;
 }

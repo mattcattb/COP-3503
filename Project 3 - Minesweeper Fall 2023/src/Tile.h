@@ -8,10 +8,13 @@
 /*
 
     - make tiles with flags unrevealable
-    - not let revealed tiles to be flag placed
+    // - not let revealed tiles to be flag placed
     - recursively reveal all other tiles if no mines surround tile
-    - randomly place mines
+    //- randomly place mines
     - reveal if game is won 
+    - make left and right clicked actions to better organize stuff
+
+    - draw mine on top of flag if mine revealed
 
 */
 
@@ -45,9 +48,12 @@ public:
     void draw(sf::RenderWindow &window); // draw all loaded sprites
 
     // state changers
-    void become_mine(){_is_mine = true;}; // turns tile into a mine
-    void reveal(){_revealed = true;}; // set tile state to reveal
-    int toggle_flag(); // add or remove flag, returning to add to counter
+    void left_click(); // reveal
+    int right_click(); // toggle flag
+
+    void become_mine(); // turns tile into a mine
+    void reveal(); // set tile state to reveal
+    void hide(); // hide tile
 
     // getters 
     bool is_mine(){return _is_mine;};

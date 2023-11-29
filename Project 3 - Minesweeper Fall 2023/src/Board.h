@@ -10,9 +10,9 @@
 //Todo
 /*
 
-    - randomly place mines
+    // - randomly place mines
     - maybe smarter updating of each tiles sprite loader
-
+    - check board state (won, lost, still playing)
 */
 
 
@@ -32,14 +32,17 @@ public:
 
     Board(int rows, int cols, int mines, Texture_Manager &manager);
     
-    // update each tiles states?
+    // update each tiles states based on mouse_position
     void update_board(sf::Vector2i mouse_pos, bool left_click);
 
     // get information on board
-    bool board_won(); // determines if board won
+    int board_state(); // says if board lost, won, or neither
     
     // change board state
     void reveal_all(); // set every tile to revealed
+    void reveal_mines(); // set mines to revealed 
+    void hide_mines(); // set all mines to hidden
+    void reset_board(); // resets board
 
     // draw board
     void draw_tiles(sf::RenderWindow &window); // draw each tile in board

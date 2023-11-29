@@ -23,7 +23,7 @@ class Game_Window{
     int _height, _width, _mines;
     int _cols, _rows;
     bool paused;
-    bool debugging = false;
+    bool debugging;
 
     std::string _username;
 

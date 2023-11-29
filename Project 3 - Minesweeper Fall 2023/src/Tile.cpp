@@ -6,8 +6,8 @@ Tile::Tile(int row, int col, Texture_Manager &manager){
     set_neighbors_null(); // set all neighbors to nullptr first
     texture_manager = &manager; // set texture manager
 
-    // set loader (should be empty tile)
-    set_loader();
+    // set sprite loader as a hidden sprite only
+    add_sprite("tile_hidden");
 
 }
 
@@ -123,18 +123,50 @@ void Tile::set_loader(){
         // tile is not a mine, so must display its number. 
         int neighbors = get_adjacent_mines();
         
-        if (neighbors > 0){
-            // draw the number on top!
-            std::string image_location = "number_" + neighbors;
-            add_sprite(image_location);
+        switch (neighbors)
+        {
+        case 1:
+            /* code */
+            add_sprite("number_1");
+            break;
+        case 2:
+            add_sprite("number_2");
+            break;
+
+        case 3:
+            add_sprite("number_3");
+            break;
+
+        case 4:
+            add_sprite("number_4");
+            break;
+
+        case 5:
+            add_sprite("number_5");
+            break;
+
+        case 6:
+            add_sprite("number_6");
+            break;
+
+        case 7:
+            add_sprite("number_7");
+            break;
+
+        case 8:
+            add_sprite("number_8");
+            break;
+
+        default:
+            break;
         }
+
     }
 
 }
 
 void Tile::draw(sf::RenderWindow &window){
     // draw each sprite in sprite_loader
-    set_loader(); // set vector of sprites to draw
     for(int i = 0; i < sprite_loader.size(); i += 1){
         sf::Sprite *cur_sprite = sprite_loader[i];
         window.draw(*cur_sprite);
@@ -159,8 +191,22 @@ void Tile::print_tile(){
     std::cout << "revealed: " << _revealed << " is_mine: " << _is_mine << " has_flag: " << _has_flag << std::endl;
     std::cout << "_row, _col: (" << _row << ", " << _col << ")\n";
     std::cout << "_xpos, _ypos: (" << _xpos << ", " << _ypos << ")\n";   
+    std::cout << "neighbor mines: " << get_adjacent_mines() << std::endl; 
     std::cout << std::endl;
 }
+
+void Tile::print_neighbors(){
+    //TODO print info of each neighbor!
+
+    std::cout << "Printing neighbors of tile _row: " << _row << " _col: " << _col << std::endl;
+
+    for(int i = 0; i < 8; i += 1){
+        if (neighbors[i] != nullptr){
+            neighbors[i]->print_tile();
+        }
+    }
+}
+
 
 // ============ State Changers ============
 

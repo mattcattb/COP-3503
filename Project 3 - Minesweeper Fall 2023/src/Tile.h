@@ -62,6 +62,7 @@ public:
 
     // debugging
     void print_tile();
+    void print_neighbors();
 
     // set sprite loader according to state
     void set_loader();

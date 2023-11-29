@@ -9,9 +9,7 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
     init_buttons();
     init_window();
     init_displays();
-    std::cout << "init board\n";
     init_board();
-    std::cout << "finished all\n";
     
 }
 
@@ -49,7 +47,6 @@ int Game_Window::event_loop(){
                 // get mouse position of pressed mouse
                 mouse_pos = sf::Mouse::getPosition(render_window);
                 
-                std::cout << mouse_pos.x << " " << mouse_pos.y << std::endl;
 
                 // get if left or right click
                 left_click = (event.mouseButton.button == sf::Mouse::Left);
@@ -62,14 +59,20 @@ int Game_Window::event_loop(){
                     }
 
                 }else if (pause_button_clicked(mouse_pos)){
+                    std::cout << "pause button pressed!\n";
                     update_pause_button();
                     
                 }else if(leaderboard_button_clicked(mouse_pos)){
-                    update_pause_button();
+                    std::cout << "leaderboard button pressed!\n";
+                    update_leaderboard();
 
                 }else if(debug_button_clicked(mouse_pos)){
+                    std::cout << "debug button pressed!\n";
                     update_debug_button();
 
+                }else if(happy_face_button_clicked(mouse_pos)){
+                    std::cout << "happy_face_button pressed!\n";
+                    update_happy_face_button(); 
                 }
 
                 break;
@@ -121,6 +124,7 @@ void Game_Window::init_variables(int rows, int cols, int mines, std::string user
     _height = _rows*32 + 100;
     _width = _cols*32;
     paused = false;
+    debugging = false;
 }
 
 void Game_Window::init_displays(){
@@ -155,9 +159,9 @@ void Game_Window::update_pause_button(){
 
     // change pause sprite
     if (paused){
-        pause_play_button.setTexture(texture_manager->getTexture("pause"));
-    }else{
         pause_play_button.setTexture(texture_manager->getTexture("play"));
+    }else{
+        pause_play_button.setTexture(texture_manager->getTexture("pause"));
     }
 }
 
@@ -252,7 +256,7 @@ bool Game_Window::leaderboard_button_clicked(sf::Vector2i mouse_pos){
     sf::FloatRect leaderboard_bounds = leaderboard_button.getLocalBounds();
     float spriteWidth = leaderboard_bounds.width; // x
     float spriteHeight = leaderboard_bounds.height; // y 
-    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    sf::Vector2f sprite_pos = leaderboard_button.getPosition(); // top left 
     if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
         && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
         return true;
@@ -265,7 +269,7 @@ bool Game_Window::debug_button_clicked(sf::Vector2i mouse_pos){
     sf::FloatRect debug_bounds = debug_button.getLocalBounds();
     float spriteWidth = debug_bounds.width; // x
     float spriteHeight = debug_bounds.height; // y 
-    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    sf::Vector2f sprite_pos = debug_button.getPosition(); // top left 
     if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
         && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
         return true;
@@ -278,7 +282,7 @@ bool Game_Window::happy_face_button_clicked(sf::Vector2i mouse_pos){
     sf::FloatRect debug_bounds = happy_button.getLocalBounds();
     float spriteWidth = debug_bounds.width; // x
     float spriteHeight = debug_bounds.height; // y 
-    sf::Vector2f sprite_pos = pause_play_button.getPosition(); // top left 
+    sf::Vector2f sprite_pos = happy_button.getPosition(); // top left 
     if (mouse_pos.x >= sprite_pos.x && mouse_pos.x <= (sprite_pos.x + spriteWidth) 
         && mouse_pos.y >= sprite_pos.y && mouse_pos.y <= (sprite_pos.y + spriteHeight)){
         return true;

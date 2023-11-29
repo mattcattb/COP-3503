@@ -9,20 +9,24 @@ Board::Board(int rows, int cols, int mines, Texture_Manager &manager){
     _mines = mines;
     counter = mines;
 
-    // set 2D vector of tiles (no mines) 
-    create_empty_board(manager);
+    texture_manager = &manager;
 
-    // set boards neighbors
-    set_board_neighbors();
+    // set 2D vector of tiles (no mines) 
+    create_empty_board();
 
     // place all mines on board
     randomize_mines(mines);
 
+    // set boards neighbors
+    set_board_neighbors();
+    
 }
 
 // init functions
 
-void Board::create_empty_board(Texture_Manager &manager){
+void Board::create_empty_board(){
+
+    tile_vector.clear();
 
     // first, push back each row
     for (int r = 0; r < _rows; r++) {
@@ -33,7 +37,7 @@ void Board::create_empty_board(Texture_Manager &manager){
     for(int r = 0; r < _rows; r += 1){
         for(int c = 0; c < _cols; c += 1){
             // initially set all times to no mine
-            tile_vector[r].push_back(Tile(r, c, manager));
+            tile_vector[r].push_back(Tile(r, c, *texture_manager));
         }
     } 
 }
@@ -89,6 +93,7 @@ void Board::reveal_all(){
     for(int row = 0; row < _rows; row += 1){
         for(int col = 0; col < _cols; col += 1){
             tile_vector[row][col].reveal();
+            tile_vector[row][col].set_loader();
         }
     }
 
@@ -100,6 +105,7 @@ void Board::reveal_mines(){
         for (int c = 0; c < _cols; c += 1){
             if (tile_vector[r][c].is_mine()){
                 tile_vector[r][c].reveal();
+                tile_vector[r][c].set_loader();
             }
         }
     }
@@ -112,6 +118,7 @@ void Board::hide_mines(){
         for (int c = 0; c < _cols; c += 1){
             if (tile_vector[r][c].is_mine()){
                 tile_vector[r][c].hide();
+                tile_vector[r][c].set_loader();
             }
         }
     }
@@ -119,7 +126,10 @@ void Board::hide_mines(){
 }
 
 void Board::reset_board(){
-    //TODO 
+    std::cout << "resetting board!" << std::endl;
+    create_empty_board();
+    randomize_mines(_mines);
+    set_board_neighbors();
 } 
 
 
@@ -141,7 +151,9 @@ void Board::update_board(sf::Vector2i mouse_pos, bool left_click){
     int row_clicked = mouse_pos.y/32;
 
     std::cout << "tile clicked! row " << row_clicked << " col " << col_clicked << std::endl;
-    
+    tile_vector[row_clicked][col_clicked].print_tile();
+    tile_vector[row_clicked][col_clicked].print_neighbors();
+
     if (left_click){
         // left click: reveal
         tile_vector[row_clicked][col_clicked].left_click();

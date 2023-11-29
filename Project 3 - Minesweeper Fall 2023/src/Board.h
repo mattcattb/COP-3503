@@ -11,8 +11,9 @@
 /*
 
     // - randomly place mines
-    - maybe smarter updating of each tiles sprite loader
+    //- maybe smarter updating of each tiles sprite loader
     - check board state (won, lost, still playing)
+    - FIX NEIGHBOR MINES FUNCTION!!! HUGE ISSUE
 */
 
 
@@ -23,10 +24,12 @@ class Board{
 
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]
 
+    Texture_Manager * texture_manager;
+
     // initialize board and place mines
-    void create_empty_board(Texture_Manager &manager);
-    void set_board_neighbors();
+    void create_empty_board();
     void randomize_mines(int mines);
+    void set_board_neighbors();
 
 public:
 

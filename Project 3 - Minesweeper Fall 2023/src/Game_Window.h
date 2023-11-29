@@ -10,8 +10,8 @@
     - setup digits counter
     - integrate timer counter
     - impliment leaderboard button
-    - toggle pause button
-    - debug button impliment
+    //- toggle pause button
+    //- debug button impliment
 
 */
 
@@ -65,11 +65,11 @@ class Game_Window{
     void draw_board();
 
     // helpers
-    bool tile_clicked(sf::Vector2i mouse_pos); // bool if tile clicked
-    bool pause_button_clicked(sf::Vector2i mouse_pos); 
-    bool leaderboard_button_clicked(sf::Vector2i mouse_pos);
-    bool debug_button_clicked(sf::Vector2i mouse_pos);
-    bool happy_face_button_clicked(sf::Vector2i mouse_pos);
+    bool tile_clicked(sf::Vector2i &mouse_pos); // bool if tile clicked
+    bool pause_button_clicked(sf::Vector2i &mouse_pos); 
+    bool leaderboard_button_clicked(sf::Vector2i &mouse_pos);
+    bool debug_button_clicked(sf::Vector2i &mouse_pos);
+    bool happy_face_button_clicked(sf::Vector2i &mouse_pos);
 
 public:
 

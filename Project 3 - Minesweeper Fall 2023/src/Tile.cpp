@@ -11,7 +11,7 @@ Tile::Tile(int row, int col, Texture_Manager &manager){
 
 }
 
-// init functions
+// ============ init functions
 
 void Tile::init_variables(int row, int col){
 
@@ -53,7 +53,7 @@ int Tile::get_adjacent_mines(){
     return num_adjacent;
 }
 
-void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
+void Tile::setup_neighbors(std::vector<std::vector<Tile>> &board){
     // using board and current location, setup 
     int max_rows = board.size();
     int max_cols = board[0].size();
@@ -71,11 +71,11 @@ void Tile::setup_neighbors(std::vector<std::vector<Tile>> board){
             
             if(cur_row < 0 || cur_row >= max_rows){
                 // check if row out of bounds
-                neighbors[placement] = nullptr;
+                continue;
 
             }else if (cur_col < 0 || cur_col >= max_cols){
                 // check if col out of bounds
-                neighbors[placement] = nullptr;
+                continue;
             }else{
                 // still in board bounds, so point to it
                 neighbors[placement] = &board[cur_row][cur_col];

@@ -8,6 +8,7 @@ Board::Board(int rows, int cols, int mines, Texture_Manager &manager){
     _cols = cols;
     _mines = mines;
     counter = mines;
+    _state = 0; // -1: defeat, 0 still playing, 1: victory
 
     texture_manager = &manager;
 
@@ -146,6 +147,8 @@ void Board::draw_tiles(sf::RenderWindow &window){
 }
 
 void Board::update_board(sf::Vector2i mouse_pos, bool left_click){
+    // TODO determine if game state is changed by these updates!
+    
     // updates board with mouse position and left/right click
     int col_clicked = mouse_pos.x/32;
     int row_clicked = mouse_pos.y/32;

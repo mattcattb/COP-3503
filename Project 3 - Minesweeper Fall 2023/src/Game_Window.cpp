@@ -229,7 +229,7 @@ void Game_Window::draw_board(){
 
 // ======== helpers ==========
 
-bool Game_Window::tile_clicked(sf::Vector2i mouse_pos){
+bool Game_Window::tile_clicked(sf::Vector2i &mouse_pos){
 
     if (mouse_pos.x <= _cols*32 && mouse_pos.y <= _rows*32){
         return true;
@@ -239,7 +239,7 @@ bool Game_Window::tile_clicked(sf::Vector2i mouse_pos){
 
 }
 
-bool Game_Window::pause_button_clicked(sf::Vector2i mouse_pos){
+bool Game_Window::pause_button_clicked(sf::Vector2i &mouse_pos){
     sf::FloatRect pause_bounds = pause_play_button.getLocalBounds();
     float spriteWidth = pause_bounds.width; // x
     float spriteHeight = pause_bounds.height; // y 
@@ -252,7 +252,7 @@ bool Game_Window::pause_button_clicked(sf::Vector2i mouse_pos){
     }
 }
 
-bool Game_Window::leaderboard_button_clicked(sf::Vector2i mouse_pos){
+bool Game_Window::leaderboard_button_clicked(sf::Vector2i &mouse_pos){
     sf::FloatRect leaderboard_bounds = leaderboard_button.getLocalBounds();
     float spriteWidth = leaderboard_bounds.width; // x
     float spriteHeight = leaderboard_bounds.height; // y 
@@ -265,7 +265,7 @@ bool Game_Window::leaderboard_button_clicked(sf::Vector2i mouse_pos){
     }
 }
 
-bool Game_Window::debug_button_clicked(sf::Vector2i mouse_pos){
+bool Game_Window::debug_button_clicked(sf::Vector2i &mouse_pos){
     sf::FloatRect debug_bounds = debug_button.getLocalBounds();
     float spriteWidth = debug_bounds.width; // x
     float spriteHeight = debug_bounds.height; // y 
@@ -278,7 +278,7 @@ bool Game_Window::debug_button_clicked(sf::Vector2i mouse_pos){
     }
 }
 
-bool Game_Window::happy_face_button_clicked(sf::Vector2i mouse_pos){
+bool Game_Window::happy_face_button_clicked(sf::Vector2i &mouse_pos){
     sf::FloatRect debug_bounds = happy_button.getLocalBounds();
     float spriteWidth = debug_bounds.width; // x
     float spriteHeight = debug_bounds.height; // y 

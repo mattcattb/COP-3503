@@ -7,12 +7,12 @@
 //Todo
 /*
 
-    - make tiles with flags unrevealable
+    //- make tiles with flags unrevealable
     // - not let revealed tiles to be flag placed
     - recursively reveal all other tiles if no mines surround tile
     //- randomly place mines
     - reveal if game is won 
-    - make left and right clicked actions to better organize stuff
+    //- make left and right clicked actions to better organize stuff
 
     - draw mine on top of flag if mine revealed
 
@@ -43,7 +43,7 @@ public:
 
     Tile(int row, int col, Texture_Manager &manager);
 
-    void setup_neighbors(std::vector<std::vector<Tile>> board);
+    void setup_neighbors(std::vector<std::vector<Tile>> &board);
 
     void draw(sf::RenderWindow &window); // draw all loaded sprites
 

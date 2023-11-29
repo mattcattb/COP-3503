@@ -13,13 +13,13 @@
     // - randomly place mines
     //- maybe smarter updating of each tiles sprite loader
     - check board state (won, lost, still playing)
-    - FIX NEIGHBOR MINES FUNCTION!!! HUGE ISSUE
+    //- FIX NEIGHBOR MINES FUNCTION!!! HUGE ISSUE
 */
 
 
 class Board{
 
-    int _mines, _rows, _cols;
+    int _mines, _rows, _cols, _state;
     int counter; // what counter should display (starts at num mines)
 
     std::vector<std::vector<Tile>> tile_vector; // tile_vector[row][col]

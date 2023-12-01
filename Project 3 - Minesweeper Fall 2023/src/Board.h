@@ -40,7 +40,8 @@ public:
 
     // get information on board
     int board_state(); // says if board lost, won, or neither
-    
+    int get_counter(){return counter;}; // get board counter
+
     // change board state
     void reveal_all(); // set every tile to revealed
     void reveal_mines(); // set mines to revealed 

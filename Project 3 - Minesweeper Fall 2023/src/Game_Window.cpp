@@ -1,6 +1,5 @@
 #include "Game_Window.h"
 
-
 Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
 
     // setup board!
@@ -14,7 +13,10 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
 }
 
 Game_Window::~Game_Window(){
+    
     delete board;
+    delete counter;
+
 }
 
 int Game_Window::event_loop(){
@@ -57,13 +59,18 @@ int Game_Window::event_loop(){
                     if (!paused){
                         board->update_board(mouse_pos, left_click);
                     }
+                    
+                    // counter only updated when board clicked! 
+                    int counter_val = board->get_counter();
+                    std::cout << "counter val is " << counter_val << std::endl;
+                    counter->set_display(counter_val);
+
 
                 }else if (pause_button_clicked(mouse_pos)){
                     std::cout << "pause button pressed!\n";
                     update_pause_button();
                     
                 }else if(leaderboard_button_clicked(mouse_pos)){
-                    std::cout << "leaderboard button pressed!\n";
                     update_leaderboard();
 
                 }else if(debug_button_clicked(mouse_pos)){
@@ -82,11 +89,19 @@ int Game_Window::event_loop(){
             }
         }
 
-        // see if game won!
+        // check game state
+        if (board->board_state() == 1){
+            // YOU WON
+            happy_button.setTexture(texture_manager->getTexture("face_win"));
+
+        }else if (board->board_state() == -1){
+            // game lost... 
+            happy_button.setTexture(texture_manager->getTexture("face_lose"));
+        }
 
         // if mine pressed (loss state) reveal all tiles with mines + end game
 
-        render_window.clear(sf::Color::White);
+        render_window.clear(sf::Color::Blue);
 
         // draw everything
         draw_all();
@@ -128,7 +143,26 @@ void Game_Window::init_variables(int rows, int cols, int mines, std::string user
 }
 
 void Game_Window::init_displays(){
-    // initialize display elements (timer, number of mines left)
+    // initialize display elements (counter, timer)
+
+
+    // init counter first
+    int temp_mine = _mines;
+    int array_size = 1; // 1 extra for negative 
+    while (temp_mine > 0){
+        array_size += 1;
+        temp_mine = temp_mine/10;
+    }
+
+    // array size is the number of digits in mine
+    int counter_x = 32;
+    int counter_y = 32*(_rows+0.5) + 16;
+    sf::Texture * digits = &texture_manager->getTexture("digits");
+    counter = new Display(array_size, counter_x, counter_y, digits);
+
+    counter->set_display(_mines);
+
+    // init timer
 }
 
 void Game_Window::init_buttons(){
@@ -212,14 +246,16 @@ void Game_Window::draw_all(){
 void Game_Window::draw_buttons(){
 
     render_window.draw(happy_button);
-    render_window.draw(counter);
     render_window.draw(debug_button);
     render_window.draw(pause_play_button);
     render_window.draw(leaderboard_button);
 
 }
+
 void Game_Window::draw_displays(){
 
+    // draw each digit in counter sprite array
+    counter->draw(render_window);
 }
 
 void Game_Window::draw_board(){

@@ -82,8 +82,8 @@ void Board::set_board_neighbors(){
 
 int Board::board_state(){ 
     //TODO -1 board lost, 0 still playing, 1 board solved
-    
-    return true;
+    // checks board for an update to the state.
+    return _state;
 }
 
 
@@ -128,6 +128,10 @@ void Board::hide_mines(){
 
 void Board::reset_board(){
     std::cout << "resetting board!" << std::endl;
+
+    counter = _mines;
+    _state = 0; // -1: defeat, 0 still playing, 1: victory
+
     create_empty_board();
     randomize_mines(_mines);
     set_board_neighbors();
@@ -153,19 +157,17 @@ void Board::update_board(sf::Vector2i mouse_pos, bool left_click){
     int col_clicked = mouse_pos.x/32;
     int row_clicked = mouse_pos.y/32;
 
-    std::cout << "tile clicked! row " << row_clicked << " col " << col_clicked << std::endl;
-    tile_vector[row_clicked][col_clicked].print_tile();
-    tile_vector[row_clicked][col_clicked].print_neighbors();
-
     if (left_click){
         // left click: reveal
+        if (tile_vector[row_clicked][col_clicked].is_mine()){
+            _state = -1; // state is now lost!
+        }
         tile_vector[row_clicked][col_clicked].left_click();
 
     }else{
         // right click: place/remove flag and also change counter
-        counter += tile_vector[row_clicked][col_clicked].right_click();
+        counter -= tile_vector[row_clicked][col_clicked].right_click();
     }
-    tile_vector[row_clicked][col_clicked].set_loader();
 }
 
 

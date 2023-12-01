@@ -13,7 +13,6 @@
     //- randomly place mines
     - reveal if game is won 
     //- make left and right clicked actions to better organize stuff
-
     - draw mine on top of flag if mine revealed
 
 */
@@ -42,13 +41,11 @@ class Tile{
 public:
 
     Tile(int row, int col, Texture_Manager &manager);
-
     void setup_neighbors(std::vector<std::vector<Tile>> &board);
-
     void draw(sf::RenderWindow &window); // draw all loaded sprites
 
     // state changers
-    void left_click(); // reveal
+    int left_click(); // reveal
     int right_click(); // toggle flag
 
     void become_mine(); // turns tile into a mine

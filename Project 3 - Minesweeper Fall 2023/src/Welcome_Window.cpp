@@ -4,7 +4,7 @@
 Welcome_Window::Welcome_Window(int rows, int cols){
     // constructor for Welcome Window
 
-    init_variables(cols, rows);
+    init_variables(rows, cols);
     init_window();
     init_fonts();
     init_text();

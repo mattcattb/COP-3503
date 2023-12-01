@@ -3,11 +3,13 @@
 #include "Texture_Manager.h"
 #include <string>
 #include <iostream>
+#include "Display.h"
 
 //Todo
 /*
 
-    - setup digits counter
+    - make all share the same texture pointer, making speedup significantly
+    //- setup digits counter
     - integrate timer counter
     - impliment leaderboard button
     //- toggle pause button
@@ -27,24 +29,27 @@ class Game_Window{
 
     std::string _username;
 
+    // 
     Board *board;
-
     Texture_Manager* texture_manager;
+    sf::RenderWindow render_window;
+
+
+
+    // === Buttons
 
     // happy face button
     sf::Sprite happy_button;
-    // counter
-    sf::Sprite counter;
     // debug button
     sf::Sprite debug_button;
     // pause/play button
     sf::Sprite pause_play_button;
     // leaderboard button
     sf::Sprite leaderboard_button;
-
-    // timer
-    sf::RenderWindow render_window;
-
+    
+    // === Displays
+    Display * counter;
+    
     // init functions
     void init_board();
     void init_window();
@@ -70,6 +75,8 @@ class Game_Window{
     bool leaderboard_button_clicked(sf::Vector2i &mouse_pos);
     bool debug_button_clicked(sf::Vector2i &mouse_pos);
     bool happy_face_button_clicked(sf::Vector2i &mouse_pos);
+
+    void set_counter(int number);
 
 public:
 

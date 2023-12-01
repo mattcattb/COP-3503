@@ -210,22 +210,42 @@ void Tile::print_neighbors(){
 
 // ============ State Changers ============
 
-void Tile::left_click(){ 
-    // reveal tile if tile has no flag placed
-    
-    // dont do anything if there is a flag already there
+int Tile::left_click(){ 
+    // return -1 if mine clicked
+
+    // do nothing if tile has flag placed on it
     if (_has_flag){
-        return;
+        return 0;
     }
 
+    // reveal the tile
     reveal();
+    
+    if (_is_mine){
+        // if tile is a mine, return -1 (game lost)
+        return -1;
+    }
 
     //TODO if tile is lonely (0 mine neighbors) reveal surrounding lonely tiles recursively
+    if(get_adjacent_mines() == 0){
+        // if tile is "lonely" reveal all nearby
+        for(int i = 0; i < 8; i += 1){
+            if (neighbors[i] != nullptr && (neighbors[i]->_is_mine == false)){
+                // if this neighbor is not a null pointer, and is not a mine, reveal itself
+                if (neighbors[i]->_revealed == false && (neighbors[i]->get_adjacent_mines() == 0)){
+                    // if this neighbor is hidden and is a lonely tile, recursively call it 
+                    neighbors[i]->left_click();
+                }
+            }
+        }
+    }
+
+    return 0;
 
 }
 
 int Tile::right_click(){ 
-    // return what to add to counter (1 if removing flag, -1 if adding flag)
+    // return what to add to counter (1 if adding flag, -1 if removing flag)
 
     // if revealed, no flag is added
     if (_revealed){
@@ -234,13 +254,16 @@ int Tile::right_click(){
 
     int return_val = 0;
     if (_has_flag == true){
-        // we are removing a flag, add to mine counter
-        return_val = 1;
-    }else if (_has_flag == false){
-        // we are adding a flag, so subtract from mine counter
+        // we are removing a flag
         return_val = -1;
+    }else if (_has_flag == false){
+        // we are adding a flag
+        return_val = 1;
     }
     _has_flag = !_has_flag;
+
+    // set the loader of clicked tile
+    set_loader();
 
     return return_val;
 }
@@ -256,7 +279,7 @@ void Tile::reveal(){
     // set tile state to reveal and remove flag
     _has_flag = false;
     _revealed = true; 
-
+    set_loader();
 } 
 
 void Tile::hide(){

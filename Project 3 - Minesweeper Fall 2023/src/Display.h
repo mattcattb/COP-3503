@@ -10,10 +10,11 @@ struct Display{
 
     int left_x, left_y;
     int display_size;
+    bool negative;
 
     void set_digit(sf::Sprite &digit, int num);
 
-    Display(int digits, int x, int y, sf::Texture * digits_texture);
+    Display(int digits, int x, int y, sf::Texture * digits_texture, bool n=true);
     ~Display(){
         delete[] display_array;
     }

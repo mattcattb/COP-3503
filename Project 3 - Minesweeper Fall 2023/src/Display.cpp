@@ -1,23 +1,29 @@
 #include "Display.h"
 
-Display::Display(int digits, int x, int y, sf::Texture * digits_texture){
+Display::Display(int digits, int x, int y, sf::Texture * digits_texture, bool n){
     
+    // negative means if the negative sign is displayed or not
     
     std::cout << "Constructing a display!\n";
 
     display_size = digits;
     left_x = x;
     left_y = y;
+    negative = n;
 
     // dynamic array of sprite pointers
-    display_array = new sf::Sprite[digits];
+
+    if (negative){
+        // if negative included, add one for the negative symbol
+        display_size += 1;
+    }
+    display_array = new sf::Sprite[display_size];
 
     for(int i = 0; i < display_size; i += 1){
         // i is the digits place (2,1,0)
         display_array[i] = sf::Sprite(*digits_texture);
         // set position of sprite (i=0 is right most)
         int cur_x = x + (display_size - 1 - i)*21;
-        std::cout << "cur_x of sprite i:" << i << " is " << cur_x << std::endl;
         display_array[i].setPosition(cur_x, y);
         // set digit to 0 
         set_digit(display_array[i], 0); 
@@ -42,8 +48,6 @@ void Display::set_digit(sf::Sprite &digit, int num){
 void Display::set_display(int val){
     // set counter to number (remember LSD is index 0)
     
-    std::cout << "Setting display to " << val << std::endl; 
-
     if (val < 0){
         // negative number! set sprite [size-1] to -1
         set_digit(display_array[display_size - 1], -1);
@@ -54,8 +58,15 @@ void Display::set_display(int val){
     }
     
     int i = 0;
-    while(i < display_size - 1 ){
-        std::cout << "i:" << i << " to digit" << val%10 << std::endl; 
+
+    int final_index = display_size;
+
+    if (negative){
+        // if negative, save the final index for the negative sign
+        final_index = final_index - 1; 
+    }
+
+    while(i < final_index){
         set_digit(display_array[i], val%10);
         val = val/10;
         i += 1;

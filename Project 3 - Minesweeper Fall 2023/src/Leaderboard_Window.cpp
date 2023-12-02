@@ -12,9 +12,7 @@ Leaderboard_Window::Leaderboard_Window(int r, int c){
     _width = _cols*16;
 
     init_fonts();
-    std::cout << "creating leaderboard!\n";
     init_leaderboard_scores();
-    std::cout << "setting up title\n";
     init_title();
 
 }

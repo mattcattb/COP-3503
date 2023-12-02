@@ -52,6 +52,9 @@ public:
     void reveal(); // set tile state to reveal
     void hide(); // hide tile
 
+    void mask();
+    void unmask();
+
     // getters 
     bool is_mine(){return _is_mine;};
     bool flag_placed(){return _has_flag;};

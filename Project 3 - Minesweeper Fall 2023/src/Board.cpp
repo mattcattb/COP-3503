@@ -137,6 +137,23 @@ void Board::reset_board(){
     set_board_neighbors();
 } 
 
+void Board::mask(){ 
+    // adds empty tile to each tile
+    for(int r = 0; r < _rows; r += 1){
+        for(int c = 0; c < _cols; c += 1){
+            tile_vector[r][c].mask();
+        }
+    }
+}
+
+void Board::unmask(){ 
+    // removes empty tile mask
+    for(int r = 0; r < _rows; r += 1){
+        for(int c = 0; c < _cols; c += 1){
+            tile_vector[r][c].unmask();
+        }
+    }
+}
 
 void Board::draw_tiles(sf::RenderWindow &window){ 
     // draw each tile in board

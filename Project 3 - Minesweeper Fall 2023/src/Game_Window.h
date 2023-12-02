@@ -6,6 +6,7 @@
 #include "Board.h"
 #include "Texture_Manager.h"
 #include "Display.h"
+#include "Leaderboard_Window.h"
 
 
 //Todo
@@ -14,9 +15,10 @@
     - make all share the same texture pointer, making speedup significantly
     //- setup digits counter
     //- integrate timer counter
-    - impliment leaderboard button
+    // - impliment leaderboard button
     //- toggle pause button
-    //- debug button impliment
+    - make debug button not remove flags?
+    - have reset also reset timer
 
 */
 
@@ -43,6 +45,7 @@ class Game_Window{
     Board *board;
     Texture_Manager* texture_manager;
     sf::RenderWindow render_window;
+    Leaderboard_Window * leaderboard;
 
 
     // === Buttons
@@ -81,6 +84,7 @@ class Game_Window{
     void draw_buttons();
     void draw_displays();
     void draw_board();
+    void draw_mask();
 
     // === helpers
     bool tile_clicked(sf::Vector2i &mouse_pos); // bool if tile clicked
@@ -88,6 +92,10 @@ class Game_Window{
     bool leaderboard_button_clicked(sf::Vector2i &mouse_pos);
     bool debug_button_clicked(sf::Vector2i &mouse_pos);
     bool happy_face_button_clicked(sf::Vector2i &mouse_pos);
+
+    bool game_won(){return board->board_state()==1;};
+    bool game_lost(){return board->board_state()==-1;};
+    bool game_stopped(){return (game_won() || game_lost());};
 
 public:
 

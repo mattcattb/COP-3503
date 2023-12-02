@@ -174,6 +174,18 @@ void Tile::draw(sf::RenderWindow &window){
 
 }
 
+//todo maybe optimize this?
+void Tile::mask(){
+    // add a revealed tile texture on top 
+    add_sprite("tile_revealed");
+}
+
+//todo maybe optimize this as well?
+void Tile::unmask(){
+    // remove revealed tile texture on top
+    sprite_loader.pop_back();
+}
+
 // ============ helpers I guess
 
 void Tile::add_sprite(std::string texture_name){

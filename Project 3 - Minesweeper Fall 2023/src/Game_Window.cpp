@@ -9,6 +9,7 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
     init_window();
     init_displays();
     init_board();
+    leaderboard = new Leaderboard_Window(rows, cols);
     
 }
 
@@ -18,6 +19,7 @@ Game_Window::~Game_Window(){
     delete counter;
     delete minutes_timer;
     delete seconds_timer;
+    delete leaderboard;
 
 }
 
@@ -55,8 +57,8 @@ int Game_Window::event_loop(){
                 // get if left or right click
                 left_click = (event.mouseButton.button == sf::Mouse::Left);
 
-                // if tile clicked, update board
-                if (tile_clicked(mouse_pos)){
+                // if tile clicked and game not stopped, 
+                if (tile_clicked(mouse_pos) && !game_stopped()){
                     // only update board if not paused
                     if (!paused){
                         board->update_board(mouse_pos, left_click);
@@ -67,7 +69,7 @@ int Game_Window::event_loop(){
                     counter->set_display(counter_val);
 
 
-                }else if (pause_button_clicked(mouse_pos)){
+                }else if (pause_button_clicked(mouse_pos) && !game_lost()){
                     std::cout << "pause button pressed!\n";
                     update_pause_button();
                     
@@ -93,21 +95,28 @@ int Game_Window::event_loop(){
         update_time();
 
         // check game state
-        if (board->board_state() == 1){
+        if (game_won()){
             // YOU WON
-            // TODO do winstate stuff
+
+            // set face to sunglasses face
             happy_button.setTexture(texture_manager->getTexture("face_win"));
 
-        }else if (board->board_state() == -1){
+            // add users score to place
+            int mins = total_seconds_elapsed_time.count()/60;
+            int secs = total_seconds_elapsed_time.count()%60;
+            leaderboard->add_score(_username, mins, secs);
+
+        }else if (game_lost()){
             // game lost... 
-            // TODO do loss state stuff
+            
+            // set face to sad
             happy_button.setTexture(texture_manager->getTexture("face_lose"));
+            
+            // reveal all mines
+            board->reveal_mines();
         }
 
         // if mine pressed (loss state) reveal all tiles with mines + end game
-
-        render_window.clear(sf::Color::White);
-
         // draw everything
         draw_all();
 
@@ -217,21 +226,34 @@ void Game_Window::update_pause_button(){
 
     // change pause sprite
     if (paused){
+        // went from unpaused -> paused
+        board->mask();
         pause_play_button.setTexture(texture_manager->getTexture("play"));
     }else{
+        // went from paused -> unpaused
+        // unmask board
+        board->unmask();
         pause_play_button.setTexture(texture_manager->getTexture("pause"));
     }
 }
 
 void Game_Window::update_leaderboard(){
-    //TODO pause game
-    
-    //TODO reveal all tiles 
-    
-    //TODO display leaderboard window
+    //TODO mask board with hidden tiles
 
-    //TODO when leaderboard window closed, all tiles go to pevious state, resume timer
+    // mask all tiles
+    board->mask();
+    draw_all();
 
+    render_window.display();
+    
+    //display leaderboard window
+    leaderboard->display_leaderboard();
+
+    // when leaderboard window closed, all tiles go to pevious state, resume timer
+    board->unmask();
+
+    // this should make it so that no time passed
+    prev = std::chrono::high_resolution_clock::now();
 }
 
 void Game_Window::update_debug_button(){
@@ -256,11 +278,20 @@ void Game_Window::update_happy_face_button(){
     // happyface button was clicked!
     // restart and re-randomize board
     board->reset_board(); 
+    paused = false;
+    debugging = false;
+
+    total_seconds_elapsed_time = std::chrono::seconds(0);
+    now = std::chrono::high_resolution_clock::now();
+    prev = std::chrono::high_resolution_clock::now();
+
+    init_buttons();
 
     // set counter to new counter val
     int counter_val = board->get_counter();
     counter->set_display(counter_val);
-
+    minutes_timer->set_display(0);
+    seconds_timer->set_display(0);
     
 }
 
@@ -299,6 +330,8 @@ void Game_Window::update_time(){
 
 void Game_Window::draw_all(){
 
+    render_window.clear(sf::Color::White);
+
     draw_buttons();
     draw_board();
     draw_displays();
@@ -323,7 +356,19 @@ void Game_Window::draw_displays(){
 }
 
 void Game_Window::draw_board(){
+    
     board->draw_tiles(render_window);
+    
+}
+
+void Game_Window::draw_mask(){
+    // draws sprites of hidden over all of the cols
+
+    for(int r = 0; r < _rows; r += 1){
+        for (int c = 0; c < _cols; c += 1){
+
+        }
+    }
 }
 
 

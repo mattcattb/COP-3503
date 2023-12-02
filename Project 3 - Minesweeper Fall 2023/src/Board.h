@@ -48,6 +48,9 @@ public:
     void hide_mines(); // set all mines to hidden
     void reset_board(); // resets board
 
+    void mask(); // adds empty tile
+    void unmask(); // removes empty tile
+
     // draw board
     void draw_tiles(sf::RenderWindow &window); // draw each tile in board
 

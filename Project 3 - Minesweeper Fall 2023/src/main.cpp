@@ -6,6 +6,7 @@
 #include "Welcome_Window.h"
 #include "Game_Window.h"
 #include "Texture_Manager.h"
+#include "Leaderboard_Window.h"
 
 /* CHECKLIST
 
@@ -37,6 +38,14 @@ int main(int argc, char ** argv){
     int state = 0;
     std::string username; // username of this character
 
+    Leaderboard_Window leader_window(rows, cols);
+
+    leader_window.display_leaderboard();
+
+    leader_window.add_score("matty", 3, 2);
+
+    leader_window.display_leaderboard();
+
     Welcome_Window welcome_window(rows, cols);
 
     // welcome window
@@ -58,7 +67,6 @@ int main(int argc, char ** argv){
     // game loop
     return 0;
 }
-
 
 void read_config(int &rows, int &cols, int &mines){
     

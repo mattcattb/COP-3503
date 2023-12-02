@@ -8,10 +8,15 @@ Leaderboard_Window::Leaderboard_Window(int r, int c){
     _rows = r;
     _cols = c;
 
+    _height = (_rows*16)+50;
+    _width = _cols*16;
+
     init_fonts();
-    init_window();
+    std::cout << "creating leaderboard!\n";
     init_leaderboard_scores();
-    init_text();
+    std::cout << "setting up title\n";
+    init_title();
+
 }
 
 void Leaderboard_Window::init_fonts(){
@@ -21,33 +26,52 @@ void Leaderboard_Window::init_fonts(){
 }
 
 void Leaderboard_Window::init_window(){
-    render_window.create(sf::VideoMode((_rows*16)+50,_cols*16), "leaderboard", sf::Style::Close);
+
+    render_window.create(sf::VideoMode(_width, _height), "leaderboard", sf::Style::Close);
 }
 
 void Leaderboard_Window::init_leaderboard_scores(){
     // scan in scores vector from leaderboard.txt
     // min:sec, user_name
-    
+    read_leaderboard();
+
+    set_leaderboard_text();
 }
 
-void Leaderboard_Window::init_text(){
+void Leaderboard_Window::init_title(){
     // sets up text!
-
-    // set leaderboard title
-    int windowWidth = render_window.getSize().x;
-    int windowHeight = render_window.getSize().y;
-    sf::Vector2f title_pos(windowWidth/2, (windowHeight/2) - 120);
+    sf::Vector2f title_pos(_width/2, (_height/2) - 120);
     setup_text(_title, "LEADERBOARD", _text_font, true, true, sf::Color::White, 20, title_pos);
 
-    // TODO init leaderboard contents
-    // get a string top 5 scores in leaderboard(seperated by \n\n), then draw?
+}
 
+void Leaderboard_Window::set_leaderboard_text(){
+    // setup leaderboard text based on leaderboard scores
 
+    int i = 0;
+
+    std::string leaderboard_string = "";
+
+    while(i < 5 && i < _scores_leaderboard.size()){
+        leaderboard_string += _scores_leaderboard[i].get_time_str() + "\t";
+        leaderboard_string += _scores_leaderboard[i].name; 
+        if (_scores_leaderboard[i].new_score == true){
+            leaderboard_string += "*";
+        }
+        leaderboard_string += "\n\n"; 
+        i += 1;
+    }
+
+    sf::Vector2f board_pos(_width/2, (_height/2) + 20);
+    setup_text(_leaderboard_text, leaderboard_string, _text_font, true, false, sf::Color::White, 18, board_pos);
+    
 }
 
 // ===== Display Loops =====
 
 void Leaderboard_Window::display_leaderboard(){
+    init_window();
+    
     while (render_window.isOpen()){
         // draw board, and then poll event
         sf::Event event;
@@ -58,8 +82,9 @@ void Leaderboard_Window::display_leaderboard(){
 
             case sf::Event::Closed:
                 // close window but first write leaderboard contents to leaderboard.txt
-                write_leaderboard();
+                // write_leaderboard();
                 render_window.close();
+                write_leaderboard();
                 
                 return;
 
@@ -123,12 +148,84 @@ void Leaderboard_Window::setTextPos(sf::Text &text, float x, float y){
     text.setPosition(sf::Vector2f(x,y));
 }
 
-
 void Leaderboard_Window::read_leaderboard(){
     // read in from csv leaderboard.txt
+    std::ifstream file(_leaderboard_filename);
+    if (!file.is_open()){
+        std::cout << "Error reading file!\n";
+    }
+
+    std::string line;
+
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string token;
+        std::vector<std::string> tokens;
+
+        // Split the line into tokens using a comma as the delimiter
+        while (std::getline(ss, token, ',')) {
+            // Remove leading and trailing whitespaces from the token
+            tokens.push_back(token);
+        }
+
+        std::string time_string = tokens[0];
+        std::string name = tokens[1];
+        int min = std::stoi(time_string.substr(0,2));
+        int sec = std::stoi(time_string.substr(3, 5));
+        Score cur_score(name, min, sec);
+
+        _scores_leaderboard.push_back(cur_score);
+    
+    }
+
+    // Close the file
+    file.close();
+
+    sort_scores();
+
 }
 
 void Leaderboard_Window::write_leaderboard(){
+
+    std::cout << "writing leaderboard!\n";
+
+    std::ofstream out_file(_leaderboard_filename);
+
+
+    if(!out_file.is_open()){
+        std::cout << "Failed to open!" << std::endl;
+    }
+    std::cout << "going through for loop!\n";
+
+    for(int i = 0; i < _scores_leaderboard.size(); i += 1){
+        
+        std::string cur_line = _scores_leaderboard[i].get_line_string();
+        std::cout << cur_line << std::endl;
+        out_file << cur_line;
+    }
+    std::cout << "closing thingy\n";
+    out_file.close();
+
+    std::cout << "completed writing.\n";
+
+}
+
+void Leaderboard_Window::print_scores(){
+    for (int i = 0; i < _scores_leaderboard.size(); i += 1){
+        _scores_leaderboard[i].print();
+    }
+}
+
+void Leaderboard_Window::sort_scores(){
+    // Sort the vector using a lambda function as the custom comparator
+    std::sort(_scores_leaderboard.begin(), _scores_leaderboard.end(), [](Score a, Score b) {
+        // bool if a < b 
+        int seconds_a = a.min*60 + a.sec;
+        int seconds_b = b.min*60 + b.sec;
+
+        return seconds_a < seconds_b;
+
+    });
 
 }
 
@@ -137,6 +234,10 @@ void Leaderboard_Window::add_score(std::string name, int min, int sec){
 
     Score new_score(name, min, sec, true);
 
-    // add new_score to leaderboard vector 
+    _scores_leaderboard.push_back(new_score);
+
+    sort_scores();
+
+    set_leaderboard_text();
 }
 

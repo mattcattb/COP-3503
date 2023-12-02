@@ -13,7 +13,7 @@
 
     - make all share the same texture pointer, making speedup significantly
     //- setup digits counter
-    - integrate timer counter
+    //- integrate timer counter
     - impliment leaderboard button
     //- toggle pause button
     //- debug button impliment
@@ -33,11 +33,11 @@ class Game_Window{
     std::string _username;
 
     // === time variables
-    std::chrono::system_clock::time_point prev; // prev time point
-    std::chrono::system_clock::time_point now; // past time point
+    std::chrono::high_resolution_clock::time_point prev; // prev time point
+    std::chrono::high_resolution_clock::time_point now; // past time point
+    std::chrono::high_resolution_clock::time_point duration;
+    
     std::chrono::seconds total_seconds_elapsed_time; // stored to be displayed as time passes
-    // = std::chrono::seconds(0);
-
 
     // === game objects
     Board *board;

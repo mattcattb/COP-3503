@@ -106,7 +106,7 @@ int Game_Window::event_loop(){
 
         // if mine pressed (loss state) reveal all tiles with mines + end game
 
-        render_window.clear(sf::Color::Blue);
+        render_window.clear(sf::Color::White);
 
         // draw everything
         draw_all();
@@ -147,7 +147,8 @@ void Game_Window::init_variables(int rows, int cols, int mines, std::string user
     debugging = false;
 
     total_seconds_elapsed_time = std::chrono::seconds(0);
-    prev = std::chrono::system_clock::now();
+    now = std::chrono::high_resolution_clock::now();
+    prev = std::chrono::high_resolution_clock::now();
 }
 
 void Game_Window::init_displays(){
@@ -266,25 +267,33 @@ void Game_Window::update_happy_face_button(){
 void Game_Window::update_time(){
     // get duration and if not paused, add to total time
 
-    now = std::chrono::system_clock::now();
-    auto duration = now - prev;
+    now = std::chrono::high_resolution_clock::now(); //
 
-    if (!paused){
-        // if not paused, add duration to total seconds of elapsed time
-        total_seconds_elapsed_time += std::chrono::duration_cast<std::chrono::seconds>(duration);
+    std::chrono::high_resolution_clock::duration dur = std::chrono::high_resolution_clock::now() - prev;
+    std::chrono::seconds dur_seconds = std::chrono::duration_cast<std::chrono::seconds>(dur);
+
+    if (dur_seconds.count() >= 1){
+        // actually reset thingy? 
+        prev = now; 
+
+        if (!paused){
+            total_seconds_elapsed_time += dur_seconds;
+        }
     }
 
-    prev = now; 
+    // get int minutes and seconds
 
-    // set seconds counter and minutes counter
-    int minutes_int = std::chrono::duration_cast<std::chrono::seconds>(total_seconds_elapsed_time).count();
-    int seconds_int =  total_seconds_elapsed_time.count() % 60;
+    int seconds = total_seconds_elapsed_time.count() % 60;
+    int minutes =  seconds/60;
 
-    minutes_timer->set_display(minutes_int);
-    seconds_timer->set_display(seconds_int);
+    std::cout << "Minutes: " << minutes << std::endl;
+    std::cout << "Seconds: " << seconds << std::endl;
+
+
+    minutes_timer->set_display(minutes);
+    seconds_timer->set_display(seconds);
 
 }
-
 
 // =========== draw functions ===========
 
@@ -309,6 +318,8 @@ void Game_Window::draw_displays(){
 
     // draw each digit in counter sprite array
     counter->draw(render_window);
+    minutes_timer->draw(render_window);
+    seconds_timer->draw(render_window);
 }
 
 void Game_Window::draw_board(){

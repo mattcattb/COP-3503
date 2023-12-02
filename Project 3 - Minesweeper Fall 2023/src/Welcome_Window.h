@@ -36,7 +36,6 @@ class Welcome_Window{
     void draw_all();
     void draw_text();
 
-
     void update_username();
 
 public:

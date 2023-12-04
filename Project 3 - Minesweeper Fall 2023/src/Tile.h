@@ -20,7 +20,7 @@
 
 class Tile{
 
-    bool _revealed, _is_mine, _has_flag;
+    bool _revealed, _is_mine, _has_flag, _is_debugging;
 
     int _row, _col; // row,col location of tile
     int _xpos, _ypos; // x and y position of tile
@@ -29,20 +29,19 @@ class Tile{
 
     Texture_Manager * texture_manager;
     
-    std::vector<sf::Sprite*> sprite_loader;
+    std::vector<sf::Sprite> sprite_loader;
 
     void init_variables(int row, int col); // setup all variables
     void set_neighbors_null(); // set all neighbors null
-    void calculate_position(); // find the x and y position of tile 
-
-    // helper to get drawing state
-    void add_sprite(std::string texture_name);
 
 public:
 
-    Tile(int row, int col, Texture_Manager &manager);
+    Tile(int row, int col, Texture_Manager *manager);
     void setup_neighbors(std::vector<std::vector<Tile>> &board);
     void draw(sf::RenderWindow &window); // draw all loaded sprites
+
+    // add sprite of texture to top of array
+    void add_sprite(std::string texture_name);
 
     // state changers
     int left_click(); // reveal
@@ -55,10 +54,14 @@ public:
     void mask();
     void unmask();
 
+    // toggle debugging of tile
+    void toggle_debug(){_is_debugging = !_is_debugging;};
+
     // getters 
     bool is_mine(){return _is_mine;};
     bool flag_placed(){return _has_flag;};
     int get_adjacent_mines(); // returns number of hidden mines
+    bool is_revealed(){return _revealed;};
 
     // debugging
     void print_tile();

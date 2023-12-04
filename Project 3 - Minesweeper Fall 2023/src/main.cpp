@@ -12,19 +12,20 @@
 
     //- Board_config changes board size and mines number
     //- Tile Display (unrevealed, revealed and number, or mine)
-    - Tile revealing (clicking on tile revealed, if mine game over) 
-    if 0 adjacent mines, revealeach of those lonely tiles
+    //- Tile revealing (clicking on tile revealed, if mine game over) 
+    //if 0 adjacent mines, revealeach of those lonely tiles
     // - right clicking hidden tile toggles flag. remove flag to reveal
-    - counter = mines on board - flags placed
-    - Victory state: revealing all non mines ends game
-    - Defeat state: clicking mine ends game. all mines revelaed
+    //- counter = mines on board - flags placed
+    //- Victory state: revealing all non mines ends game
+    //- Defeat state: clicking mine ends game. all mines revelaed
     //- Random mine: game stat when resetting the mines forkm cfg file 
     //are randomly placed on map
     //- Welcome window made
-    - timer/pause button: timer counts up. clicking pause pauses counter 
-    and shows all tiles with tile_revealed png. Only leaderboard & face buttons work in puase mode.
-    - leaderboard button: shows top 5 leaders. pauses timer and changes all to tile_revealed
+    //- timer/pause button: timer counts up. clicking pause pauses counter 
+    // and shows all tiles with tile_revealed png. Only leaderboard & face buttons work in puase mode.
+    // - leaderboard button: shows top 5 leaders. pauses timer and changes all to tile_revealed
 
+    - BUG FIXES!!!
 
 */
 
@@ -51,9 +52,7 @@ int main(int argc, char ** argv){
     username = welcome_window.get_character_name();
  
     Game_Window game_window(rows, cols, mines, username);
-
     state = game_window.event_loop();
-
 
     // game loop
     return 0;

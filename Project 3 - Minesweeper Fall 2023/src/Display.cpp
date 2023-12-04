@@ -4,8 +4,6 @@ Display::Display(int digits, int x, int y, sf::Texture * digits_texture, bool n)
     
     // negative means if the negative sign is displayed or not
     
-    std::cout << "Constructing a display!\n";
-
     display_size = digits;
     left_x = x;
     left_y = y;

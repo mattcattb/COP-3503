@@ -18,7 +18,7 @@
     // - impliment leaderboard button
     //- toggle pause button
     - make debug button not remove flags?
-    - have reset also reset timer
+    //- have reset also reset timer
 
 */
 
@@ -103,7 +103,5 @@ public:
     ~Game_Window();
 
     int event_loop(); // returns -1 to say the window is closed, 1 to say to switch to game view
-
-    void show_leaderboard(); // have leaderboard pop up
 
 };

@@ -1,10 +1,10 @@
 #include "Tile.h"
 
-Tile::Tile(int row, int col, Texture_Manager &manager){
+Tile::Tile(int row, int col, Texture_Manager *manager){
 
     init_variables(row, col); // init tiles variables
     set_neighbors_null(); // set all neighbors to nullptr first
-    texture_manager = &manager; // set texture manager
+    texture_manager = manager; // set texture manager
 
     // set sprite loader as a hidden sprite only
     add_sprite("tile_hidden");
@@ -18,6 +18,8 @@ void Tile::init_variables(int row, int col){
     // set the row, col of that tile 
     _row = row;
     _col = col;
+
+    _is_debugging = false;
 
     _is_mine = false;
     
@@ -106,7 +108,11 @@ void Tile::set_loader(){
             // if tile has a flag, also add this flag on top too
             add_sprite("flag");
         }
-
+        // also add mine on top of flag if in debug mode
+        if (_is_debugging && _is_mine){
+            add_sprite("mine");
+        }
+        
         // finished adding all, leave
         return;
 
@@ -115,6 +121,10 @@ void Tile::set_loader(){
         add_sprite("tile_revealed");
     }
     
+    if (_has_flag){
+        add_sprite("flag");
+    }
+
     if (_is_mine){
         // put a mine on top!
         add_sprite("mine");
@@ -168,8 +178,8 @@ void Tile::set_loader(){
 void Tile::draw(sf::RenderWindow &window){
     // draw each sprite in sprite_loader
     for(int i = 0; i < sprite_loader.size(); i += 1){
-        sf::Sprite *cur_sprite = sprite_loader[i];
-        window.draw(*cur_sprite);
+        
+        window.draw(sprite_loader[i]);
     }
 
 }
@@ -190,9 +200,9 @@ void Tile::unmask(){
 
 void Tile::add_sprite(std::string texture_name){
     // creates and adds sprite to sprite_loader, setting position 
-    sf::Sprite * new_sprite = new sf::Sprite();
-    new_sprite->setTexture(texture_manager->getTexture(texture_name));
-    new_sprite->setPosition(sf::Vector2f(_xpos, _ypos)); 
+    sf::Sprite new_sprite;
+    new_sprite.setTexture(texture_manager->getTexture(texture_name));
+    new_sprite.setPosition(sf::Vector2f(_xpos, _ypos)); 
     sprite_loader.push_back(new_sprite);
 }
 
@@ -208,7 +218,7 @@ void Tile::print_tile(){
 }
 
 void Tile::print_neighbors(){
-    //TODO print info of each neighbor!
+    //print info of each neighbor
 
     std::cout << "Printing neighbors of tile _row: " << _row << " _col: " << _col << std::endl;
 
@@ -238,7 +248,7 @@ int Tile::left_click(){
         return -1;
     }
 
-    //TODO if tile is lonely (0 mine neighbors) reveal surrounding lonely tiles recursively
+    // if tile is lonely (0 mine neighbors) reveal surrounding lonely tiles recursively
     if(get_adjacent_mines() == 0){
         // if tile is "lonely" reveal all nearby
         for(int i = 0; i < 8; i += 1){

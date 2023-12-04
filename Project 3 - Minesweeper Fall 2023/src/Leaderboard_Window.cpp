@@ -39,7 +39,6 @@ void Leaderboard_Window::init_leaderboard_scores(){
 void Leaderboard_Window::init_title(){
     // sets up text!
     sf::Vector2f title_pos(_width/2, (_height/2) - 120);
-    setup_text(_title, "LEADERBOARD", _text_font, true, true, sf::Color::White, 20, title_pos);
 
 }
 
@@ -50,7 +49,11 @@ void Leaderboard_Window::set_leaderboard_text(){
 
     std::string leaderboard_string = "";
 
+    // todo make a 1. --- 2. ---- as well
+
     while(i < 5 && i < _scores_leaderboard.size()){
+        
+        leaderboard_string += std::to_string(i+1) + ".\t";
         leaderboard_string += _scores_leaderboard[i].get_time_str() + "\t";
         leaderboard_string += _scores_leaderboard[i].name; 
         if (_scores_leaderboard[i].new_score == true){
@@ -103,6 +106,38 @@ void Leaderboard_Window::display_leaderboard(){
 
     return;
 
+}
+
+bool scores_are_same(Score score1, Score score2){
+    if (score1.name.compare(score2.name)){
+        return false;
+    }
+
+    if(score1.min != score2.min){
+        return false;
+    }
+
+    if (score1.sec != score2.sec){
+        return false;
+    }
+
+    return true;
+}
+
+bool Leaderboard_Window::has_score(std::string username, int min, int sec){
+    // boolean for if score is scored already in vector
+    Score temp_score(username, min, sec);
+
+    for(int i = 0; i < _scores_leaderboard.size(); i += 1){
+        if (scores_are_same(temp_score, _scores_leaderboard[i])){
+            
+            // if score are the same, leaderboard already has this score
+            return true;
+        }
+    }
+    
+    // we went through all the scores, they are not the same
+    return false;
 }
 
 // ====== Drawing ======
@@ -185,26 +220,20 @@ void Leaderboard_Window::read_leaderboard(){
 
 void Leaderboard_Window::write_leaderboard(){
 
-    std::cout << "writing leaderboard!\n";
-
     std::ofstream out_file(_leaderboard_filename);
 
 
     if(!out_file.is_open()){
         std::cout << "Failed to open!" << std::endl;
     }
-    std::cout << "going through for loop!\n";
 
     for(int i = 0; i < _scores_leaderboard.size(); i += 1){
         
         std::string cur_line = _scores_leaderboard[i].get_line_string();
-        std::cout << cur_line << std::endl;
         out_file << cur_line;
     }
-    std::cout << "closing thingy\n";
-    out_file.close();
 
-    std::cout << "completed writing.\n";
+    out_file.close();
 
 }
 

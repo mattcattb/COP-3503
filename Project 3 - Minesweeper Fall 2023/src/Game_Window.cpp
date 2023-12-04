@@ -4,6 +4,7 @@ Game_Window::Game_Window(int rows, int cols, int mines, std::string username){
 
     // setup board!
     // initialize parts of display
+    texture_manager = new Texture_Manager();
     init_variables(rows, cols, mines, username);
     init_buttons();
     init_window();
@@ -20,14 +21,13 @@ Game_Window::~Game_Window(){
     delete minutes_timer;
     delete seconds_timer;
     delete leaderboard;
+    delete texture_manager;
 
 }
 
 int Game_Window::event_loop(){
 
     // returns -1 to say the window is closed, 1 to say to switch to game view
-
-    std::cout << "In game loop!\n";
 
     while (render_window.isOpen())
     {
@@ -63,25 +63,48 @@ int Game_Window::event_loop(){
                     if (!paused){
                         board->update_board(mouse_pos, left_click);
                     }
-                    
+
+
                     // counter only updated when board clicked! 
                     int counter_val = board->get_counter();
                     counter->set_display(counter_val);
+                    
+                    // check if game won! 
+                    if (game_won()){
+                        // YOU WON
 
+                        // set face to sunglasses face
+                        happy_button.setTexture(texture_manager->getTexture("face_win"));
 
-                }else if (pause_button_clicked(mouse_pos) && !game_lost()){
-                    std::cout << "pause button pressed!\n";
+                        // draw everything!
+                        draw_all();
+                        render_window.display();
+
+                        // add users score to place
+                        int mins = total_seconds_elapsed_time.count()/60;
+                        int secs = total_seconds_elapsed_time.count()%60;
+                        
+                        // if score not on the leaderboard, add it and display leaderboard
+                        std::cout << "ADDING NEW SCORE AFTER WINNING!\n";
+                        leaderboard->add_score(_username, mins, secs);
+                        leaderboard->display_leaderboard();
+                        // this should make it so that no time passed
+                        prev = std::chrono::high_resolution_clock::now();
+
+                    }
+
+                }else if (pause_button_clicked(mouse_pos) && !game_stopped()){
+                    // if pause clicked & game still running, update pause button
                     update_pause_button();
                     
                 }else if(leaderboard_button_clicked(mouse_pos)){
                     update_leaderboard();
 
-                }else if(debug_button_clicked(mouse_pos)){
-                    std::cout << "debug button pressed!\n";
+                }else if(debug_button_clicked(mouse_pos) && !game_stopped()){
+                    // if debug button clicked and game still going, update debug button
                     update_debug_button();
 
                 }else if(happy_face_button_clicked(mouse_pos)){
-                    std::cout << "happy_face_button pressed!\n";
                     update_happy_face_button(); 
                 }
 
@@ -94,19 +117,13 @@ int Game_Window::event_loop(){
 
         update_time();
 
-        // check game state
-        if (game_won()){
-            // YOU WON
+        // draw everything
+        draw_all();
 
-            // set face to sunglasses face
-            happy_button.setTexture(texture_manager->getTexture("face_win"));
+        render_window.display();
 
-            // add users score to place
-            int mins = total_seconds_elapsed_time.count()/60;
-            int secs = total_seconds_elapsed_time.count()%60;
-            leaderboard->add_score(_username, mins, secs);
-
-        }else if (game_lost()){
+        // check if game lost
+        if (game_lost()){
             // game lost... 
             
             // set face to sad
@@ -116,28 +133,16 @@ int Game_Window::event_loop(){
             board->reveal_mines();
         }
 
-        // if mine pressed (loss state) reveal all tiles with mines + end game
-        // draw everything
-        draw_all();
-
-        render_window.display();
-
     }
 
     return 0;
 } 
 
-void Game_Window::show_leaderboard(){ 
-    // have leaderboard pop up
-
-}
-
 // =========== init functions ===========
 
 void Game_Window::init_board(){
     // initialized stored board class
-    board = new Board(_rows, _cols, _mines, *texture_manager);
-    std::cout << "CREATED BOARD!\n";
+    board = new Board(_rows, _cols, _mines, texture_manager);
     
 }
 
@@ -219,7 +224,7 @@ void Game_Window::init_buttons(){
 // =========== update functions =========
 
 void Game_Window::update_pause_button(){
-    // TODO make pause button have each tile be "revealed" or switch back to normal state
+    // make pause button have each tile be "revealed" or switch back to normal state
     
     // toggle pause state
     paused = !paused;
@@ -238,37 +243,38 @@ void Game_Window::update_pause_button(){
 }
 
 void Game_Window::update_leaderboard(){
-    //TODO mask board with hidden tiles
 
-    // mask all tiles
-    board->mask();
-    draw_all();
+    // mask all tiles (put hidden sprite on top)
 
-    render_window.display();
+    if(!game_won()){
+
     
-    //display leaderboard window
-    leaderboard->display_leaderboard();
+        board->mask();
+        draw_all();
 
-    // when leaderboard window closed, all tiles go to pevious state, resume timer
-    board->unmask();
+        render_window.display();
+        
+        //display leaderboard window
+        leaderboard->display_leaderboard();
 
-    // this should make it so that no time passed
+        // when leaderboard window closed, all tiles go to pevious state, resume timer
+        board->unmask();
+
+    }else{
+        leaderboard->display_leaderboard();
+    }
+
+    // no time passed
     prev = std::chrono::high_resolution_clock::now();
 }
 
 void Game_Window::update_debug_button(){
-    //TODO make not work when game is in loss or win state
+    //make not work when game is in loss or win state
    
     // toggle debug state, either showing all mines or hiding all mines
     debugging = !debugging;
 
-    if (debugging){
-        // show all mines
-        board->reveal_mines();
-    }else{
-        // hide all mines
-        board->hide_mines();
-    }
+    board->toggle_debug_state();
 
     // button should not work when game ends (victory/loss)
 }
@@ -304,26 +310,22 @@ void Game_Window::update_time(){
     std::chrono::seconds dur_seconds = std::chrono::duration_cast<std::chrono::seconds>(dur);
 
     if (dur_seconds.count() >= 1){
-        // actually reset thingy? 
+        // if 1 second passed, get duration 1 second and add it to time
         prev = now; 
 
-        if (!paused){
+        if (!paused && !game_stopped()){
+            // add this duration if not paused and game not stopped
             total_seconds_elapsed_time += dur_seconds;
         }
+
+        // get int minutes and seconds
+        int seconds = total_seconds_elapsed_time.count() % 60;
+        int minutes =  total_seconds_elapsed_time.count()/60;
+
+        minutes_timer->set_display(minutes);
+        seconds_timer->set_display(seconds);
+
     }
-
-    // get int minutes and seconds
-
-    int seconds = total_seconds_elapsed_time.count() % 60;
-    int minutes =  seconds/60;
-
-    std::cout << "Minutes: " << minutes << std::endl;
-    std::cout << "Seconds: " << seconds << std::endl;
-
-
-    minutes_timer->set_display(minutes);
-    seconds_timer->set_display(seconds);
-
 }
 
 // =========== draw functions ===========

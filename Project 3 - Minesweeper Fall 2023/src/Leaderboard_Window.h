@@ -93,6 +93,7 @@ class Leaderboard_Window{
 public:
 
 
+    bool has_score(std::string username, int min, int sec);
     Leaderboard_Window(int r, int c);
     void display_leaderboard();
     void add_score(std::string name, int min, int sec); // adds user to leaderboard

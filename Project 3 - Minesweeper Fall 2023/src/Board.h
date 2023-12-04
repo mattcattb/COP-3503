@@ -31,9 +31,12 @@ class Board{
     void randomize_mines(int mines);
     void set_board_neighbors();
 
+    bool check_game_won();
+
+
 public:
 
-    Board(int rows, int cols, int mines, Texture_Manager &manager);
+    Board(int rows, int cols, int mines, Texture_Manager *manager);
     
     // update each tiles states based on mouse_position
     void update_board(sf::Vector2i mouse_pos, bool left_click);
@@ -51,6 +54,7 @@ public:
     void mask(); // adds empty tile
     void unmask(); // removes empty tile
 
+    void toggle_debug_state(); // toggles debug state for each tile
     // draw board
     void draw_tiles(sf::RenderWindow &window); // draw each tile in board
 

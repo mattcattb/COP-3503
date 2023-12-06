@@ -137,7 +137,6 @@ void Board::hide_mines(){
 }
 
 void Board::reset_board(){
-    std::cout << "resetting board!" << std::endl;
 
     counter = _mines;
     _state = 0; // -1: defeat, 0 still playing, 1: victory
@@ -186,10 +185,14 @@ void Board::update_board(sf::Vector2i mouse_pos, bool left_click){
 
     if (left_click){
         // left click: reveal
-        if (tile_vector[row_clicked][col_clicked].is_mine()){
-            _state = -1; // state is now lost!
+
+        int temp_state = tile_vector[row_clicked][col_clicked].left_click();
+        
+        // if temp state is -1, a mine was clicked on
+        if(temp_state == -1){
+            _state = -1;
         }
-        tile_vector[row_clicked][col_clicked].left_click();
+
 
     }else{
         // right click: place/remove flag and also change counter

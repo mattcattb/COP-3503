@@ -233,7 +233,7 @@ void Tile::print_neighbors(){
 // ============ State Changers ============
 
 int Tile::left_click(){ 
-    // return -1 if mine clicked
+    // return -1 if mine clicked, 0 if else
 
     // do nothing if tile has flag placed on it
     if (_has_flag){
@@ -254,7 +254,7 @@ int Tile::left_click(){
         for(int i = 0; i < 8; i += 1){
             if (neighbors[i] != nullptr && (neighbors[i]->_is_mine == false)){
                 // if this neighbor is not a null pointer, and is not a mine, reveal itself
-                if (neighbors[i]->_revealed == false && (neighbors[i]->get_adjacent_mines() == 0)){
+                if (neighbors[i]->_revealed == false){
                     // if this neighbor is hidden and is a lonely tile, recursively call it 
                     neighbors[i]->left_click();
                 }
